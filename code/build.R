@@ -4,6 +4,3 @@ source("code/install_libs.R")
 source("code/twitter_mine.R")
 # Database connection -----------------------------------------------------
 source("code/db.r")
-
-
-
