@@ -1,5 +1,6 @@
 pkgs = c("tidyverse", "academictwitteR", "tm", 
-         "tidytext", "sentimentr", "treemap"
+         "tidytext", "sentimentr", "treemap",
+         "quanteda"
          )
 
 # Install packages not yet installed

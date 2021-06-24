@@ -30,22 +30,16 @@ general_nrc_sentiment = function(corpus){
 general_nrc_sentiment(corpus = tweets_text)
 
   #2 entity sentiment
-entity_nrc_sentiment = function(corpus){
-  #token df
-  token = data.frame(text=tweets_text, stringsAsFactors = FALSE) %>% 
-    unnest_tokens(word, text)
-  
-  #Matching sentiment words from the 'NRC' sentiment lexicon
-  senti = inner_join(token, get_sentiments("nrc")) %>%
-    count(sentiment) %>%
-    arrange(sentiment)
-  
-  senti$percent = (senti$n/sum(senti$n))*100
-  
-  #Plotting the sentiment summary
+sentimentPerWord = function(word) {
+  corpus = corpus(tweets_text$text)
+  corpus = (corpus_water = subset(corpus, grepl(word, texts(corpus))))
+  token_word = data.frame(text=corpus, stringsAsFactors = FALSE) %>% unnest_tokens(word, text)
+  senti_word = inner_join(token_word, get_sentiments("nrc")) %>%
+    count(sentiment)
+  senti_word$percent = (senti_word$n/sum(senti_word$n))*100
   ggplot(senti, aes(sentiment, percent)) +
     geom_bar(aes(fill = sentiment), position = 'stack', stat = 'identity')+
-    ggtitle("(NRC EMO-LEX) \nEmotional Sentiment for Environment Agency \nmentions on Twitter")+
+    ggtitle(paste(word, sep = " ","word sentiment \nfrom Environment Agency Mentions"))+
     coord_flip() +
     coord_polar() +
     theme(
@@ -55,9 +49,12 @@ entity_nrc_sentiment = function(corpus){
       axis.text=element_text(color="white"),
       text = element_text(size=16,  family="times", colour = "white"),
     ) 
+
+
+  
 }
   #test
-general_nrc_sentiment(corpus = tweets_text)
+sentimentPerWord(word = "river")
 
 
 
