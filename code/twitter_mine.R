@@ -11,6 +11,7 @@ tweets = get_all_tweets(
 )
 # Clean data ------------------------------------------------------------
 tweets_text = as.data.frame(
-  subset(tweets,select = "text")
-)
+    subset(tweets,
+         select = c("text","author_id","possibly_sensitive","created_at"))
+  )
 

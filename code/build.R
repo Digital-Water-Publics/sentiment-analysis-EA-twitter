@@ -1,8 +1,8 @@
-# Install packages --------------------------------------------------------
+# Install and load all the wonderful packages that made this analysis possible --------------------------------------------------------
 source("code/install_libs.R")
-# Get Twitter Token -------------------------------------------------------
+# Mine the Twittersphere  -------------------------------------------------------
 source("code/twitter_mine.R")
-# Database connection -----------------------------------------------------
+# Sentiment functions -----------------------------------------------------
 source("code/sentiment.r")
 
 # git add -A
