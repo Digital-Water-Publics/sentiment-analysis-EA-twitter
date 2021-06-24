@@ -30,14 +30,14 @@ general_nrc_sentiment = function(corpus){
 general_nrc_sentiment(corpus = tweets_text)
 
   #2 entity sentiment
-sentimentPerWord = function(word) {
+entity_nrc_sentiment = function(word) {
   corpus = corpus(tweets_text$text)
   corpus = (corpus_water = subset(corpus, grepl(word, texts(corpus))))
   token_word = data.frame(text=corpus, stringsAsFactors = FALSE) %>% unnest_tokens(word, text)
   senti_word = inner_join(token_word, get_sentiments("nrc")) %>%
     count(sentiment)
   senti_word$percent = (senti_word$n/sum(senti_word$n))*100
-  ggplot(senti, aes(sentiment, percent)) +
+  ggplot(senti_word, aes(sentiment, percent)) +
     geom_bar(aes(fill = sentiment), position = 'stack', stat = 'identity')+
     ggtitle(paste(word, sep = " ","word sentiment \nfrom Environment Agency Mentions"))+
     coord_flip() +
@@ -49,9 +49,6 @@ sentimentPerWord = function(word) {
       axis.text=element_text(color="white"),
       text = element_text(size=16,  family="times", colour = "white"),
     ) 
-
-
-  
 }
   #test
 sentimentPerWord(word = "river")
