@@ -1,0 +1,7 @@
+pkgs = c("tidyverse","academictwitteR")
+library(tidyverse)
+library(academictwitteR)
+library(tm)
+library(tidytext)
+library(sentimentr)
+library(treemap)
