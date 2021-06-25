@@ -1,5 +1,5 @@
-# Sentiment Functions -----------------------------------------------------
-  #1 General Sentiment function and viz
+# Sentiment Functions
+# ------------(1) General sentiment function and viz-----------------
 general_nrc_sentiment = function(corpus){
   #token df
   token = data.frame(text=tweets_text, stringsAsFactors = FALSE) %>% 
@@ -28,8 +28,7 @@ general_nrc_sentiment = function(corpus){
 }
 #test
 general_nrc_sentiment(corpus = tweets_text)
-
-  #2 entity sentiment
+# ------------(2) Entity sentiment function and viz-----------------
 entity_nrc_sentiment = function(word) {
   corpus = corpus(tweets_text$text)
   corpus = (corpus_water = subset(corpus, grepl(word, texts(corpus))))
@@ -50,9 +49,10 @@ entity_nrc_sentiment = function(word) {
       text = element_text(size=16,  family="times", colour = "white"),
     ) 
 }
-  #test
+#test
 sentimentPerWord(word = "river")
-
+#TODO Add a tweet-level sentiment, highlighting the different words in the text and their emotions
+# ------------(3) Tweet-level sentiment function and viz-----------------
 
 
 
