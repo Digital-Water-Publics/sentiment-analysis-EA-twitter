@@ -1,5 +1,6 @@
-# Sentiment Functions
-# ------------(1) General sentiment function and viz-----------------
+# Sentiment Functions -----------------------------------------------------
+## NRC Sentiment Functions
+### 1. General sentiment function and viz
 general_nrc_sentiment = function(corpus){
   #token df
   token = data.frame(text=tweets_text, stringsAsFactors = FALSE) %>% 
@@ -26,9 +27,8 @@ general_nrc_sentiment = function(corpus){
       text = element_text(size=16,  family="times", colour = "white"),
     ) 
 }
-#test
-general_nrc_sentiment(corpus = tweets_text)
-# ------------(2) Entity sentiment function and viz-----------------
+general_nrc_sentiment(corpus = tweets_text) # test
+### 2. Entity sentiment function and viz
 entity_nrc_sentiment = function(word) {
   corpus = corpus(tweets_text$text)
   corpus = (corpus_water = subset(corpus, grepl(word, texts(corpus))))
@@ -49,10 +49,33 @@ entity_nrc_sentiment = function(word) {
       text = element_text(size=16,  family="times", colour = "white"),
     ) 
 }
-#test
-sentimentPerWord(word = "river")
-#TODO Add a tweet-level sentiment, highlighting the different words in the text and their emotions
-# ------------(3) Tweet-level sentiment function and viz-----------------
+sentimentPerWord(word = "river") #test
+#TODO Add a tweet-level sentiment, highlighting the different words in the text NS 25/6
 
+## Polarity (pos-neg) Sentiment Functions
+### 1. General sentiment polarity function and histogram
+polarity_tweet_sentiment = function(corpus){
+  # get average sentiment score for each sentence
+  sentiment_support <- sentiment_by(get_sentences(corpus$text))
+  #plot the score distribution
+  ggplot(sentiment_support,aes(ave_sentiment)) +
+    geom_histogram(bins = 50) +
+    labs(title = "Sentiment Histogram of Tweets", x = "Sentiment Score") +
+    theme_bw() +
+    theme(plot.title = element_text(size = 14, face = "bold",hjust = 0.5)) +
+    geom_vline(xintercept = 0, color = "red")
+}
+polarity_tweet_sentiment(corpus = tweets_text) #test
 
+### 2. QDAP sentiment polarity function
+tweet_QDAP_sentiment = function(corpus){
+  tt = as.data.frame(corpus$text)  
+  #Analyze sentiment
+  sentiment <- analyzeSentiment(tt)
+  #Extract dictionary-based sentiment according to the QDAP dictionary
+  sentiment2 <- sentiment$SentimentQDAP
+  #View sentiment direction (i.e. positive, neutral and negative)
+  tt$sentiment <- convertToDirection(sentiment$SentimentQDAP)
+}
+tweet_QDAP_sentiment(corpus = tt) #test
 
