@@ -8,13 +8,3 @@ source("code/sentiment.r")
 # git add -A
 # git commit -am 'Update sites'
 # git push
-
-
-
-tt = as.data.frame(tweets_text$text)  
-#Analyze sentiment
-sentiment <- analyzeSentiment(tt)
-#Extract dictionary-based sentiment according to the QDAP dictionary
-sentiment2 <- sentiment$SentimentQDAP
-#View sentiment direction (i.e. positive, neutral and negative)
-tt$sentiment <- convertToDirection(sentiment$SentimentQDAP)
