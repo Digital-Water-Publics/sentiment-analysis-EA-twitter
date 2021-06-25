@@ -15,3 +15,8 @@ tweets_text = as.data.frame(
          select = c("text","author_id","possibly_sensitive","created_at"))
   )
 
+tt = as.data.frame(
+  subset(tweets,
+         select = c("text"))
+)
+
