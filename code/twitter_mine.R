@@ -19,4 +19,3 @@ tt = as.data.frame(
   subset(tweets,
          select = c("text"))
 )
-

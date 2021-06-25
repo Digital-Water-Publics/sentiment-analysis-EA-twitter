@@ -52,20 +52,49 @@ entity_nrc_sentiment = function(word) {
 sentimentPerWord(word = "river") #test
 #TODO Add a tweet-level sentiment, highlighting the different words in the text NS 25/6
 
+
 ### 3. Entity (tweet) sentiment function and viz
 entity_tweet_nrc_sentiment = function(word){
   
+  for (i in 1:nrow(tweets_text_single)) {
+    text = tweets_text_single$text[i]
+      text = as.data.frame(text)
+    #tokenize text
+    token = data.frame(text = text, stringsAsFactors = FALSE) %>%
+      unnest_tokens(word, text)
+    
+    #match sentiment words from the 'NRC' sentiment lexicon
+    senti = inner_join(token, get_sentiments("nrc")) 
+    
+    #save specific words in tweets with emotional lex pair
+    emo_words = as.character(
+      unique(senti$word)
+    ) 
+    st = paste(emo_words,collapse=", ")
+    text$emo_lex = st
+    #save specific emotion based on word
+    emotion = as.character(unique(senti$sentiment))
+    et = paste(emotion,collapse = " ")
+    text$emotion = et
+    #save skey/most frequent emotions
+    x = c(senti$sentiment)
+    tt = table(x)
+    names = names(tt[tt==max(tt)])
+    nt = paste(names,collapse = " ")
+    text$key_emotion = nt
+  }
+  
+  tweets_text_single = subset(
+    tweets_text, select = "text"
+  )
+  text = "A short video explaining the steps some residents across the South West have taken to reduce risk to their homes and Be Flood Ready"
+  text = as.data.frame(text)
+  
   #token df
-  token = data.frame(text=tweets_text, stringsAsFactors = FALSE) %>% 
+  token = data.frame(text=text, stringsAsFactors = FALSE) %>% 
     unnest_tokens(word, text)
   
-  #Matching sentiment words from the 'NRC' sentiment lexicon
-  senti = inner_join(token, get_sentiments("nrc")) %>%
-    count(sentiment) %>%
-    arrange(sentiment)
-  
-  senti$percent = (senti$n/sum(senti$n))*100
-  
+
 }
 
 ## Polarity (pos-neg) Sentiment Functions
