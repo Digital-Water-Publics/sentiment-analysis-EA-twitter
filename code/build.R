@@ -5,6 +5,3 @@ source("code/twitter_mine.R")
 # Sentiment functions -----------------------------------------------------
 source("code/sentiment.r")
 
-# git add -A
-# git commit -am 'Update sites'
-# git push
