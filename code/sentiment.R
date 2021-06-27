@@ -51,8 +51,6 @@ entity_nrc_sentiment = function(word) {
 }
 sentimentPerWord(word = "river") #test
 #TODO Add a tweet-level sentiment, highlighting the different words in the text NS 25/6
-
-
 ### 3. Entity (tweet) sentiment function and viz
 df = data.frame (
   text = c("this is a test tweet"),
