@@ -3,5 +3,6 @@ source("code/install_libs.R")
 # Mine the Twittersphere  -------------------------------------------------------
 source("code/twitter_mine.R")
 # Sentiment functions -----------------------------------------------------
-source("code/sentiment.r")
-
+source("code/sentiment_functions.r")
+# Sentiment dataframe
+source("code/sentiment.R")
