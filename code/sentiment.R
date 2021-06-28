@@ -1,5 +1,4 @@
 # Create dataframe containing all sentiment scores ------------------------
-
 # mock df
 df = data.frame (
   text = c("this is a test tweet"),
