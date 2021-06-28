@@ -3,8 +3,8 @@ bearer_token = "AAAAAAAAAAAAAAAAAAAAAMNaJwEAAAAAJt1NQBowbyVGaYV%2Bl7vAjpOz2Es%3D
 # Twitter Mine ------------------------------------------------------------
 tweets = get_all_tweets(
     "@EnvAgency OR @EnvAgencyYNE OR @EnvAgencyNW OR @EnvAgencySE OR @EnvAgencySW OR @envagencymids OR @EnvAgencyAnglia lang:en -is:retweet",
-    "2021-01-01T00:00:00Z",
-    "2021-01-05T00:00:00Z",
+    "2016-01-01T00:00:00Z",
+    "2021-01-06T00:00:00Z",
     bearer_token,
     data_path = "data/",
     bind_tweets = TRUE
