@@ -1,9 +1,16 @@
 # Set pkgs
-pkgs = c("tidyverse", "academictwitteR", "tm", 
-         "tidytext", "sentimentr", "treemap",
-         "quanteda", "SentimentAnalysis", "RTextTools",
-         "e1071"
-         )
+pkgs = c(
+  "tidyverse",
+  "academictwitteR",
+  "tm",
+  "tidytext",
+  "sentimentr",
+  "treemap",
+  "quanteda",
+  "SentimentAnalysis",
+  "RTextTools",
+  "e1071"
+)
 
 # Install pkgs not yet installed
 installed_packages = pkgs %in% rownames(installed.packages())

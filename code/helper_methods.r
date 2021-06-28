@@ -10,6 +10,9 @@ clean_tweets = function(tweets_text) {
   tweets_text$text = gsub("amp", " ", tweets_text$text) # remove amp
   tweets_text$text = gsub("RT", " ", tweets_text$text) # remove amp
 }
-# Test clean_tweets(tweets_text = tt) 
+# Test clean_tweets(tweets_text = tt)
 
 
+# Create text only data-frame ---------------------------------------------
+tt = as.data.frame(subset(tweets,
+                          select = c("text")))

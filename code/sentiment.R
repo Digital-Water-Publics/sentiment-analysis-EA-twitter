@@ -10,16 +10,13 @@ df = data.frame (
   SentimentGI = 0,
   NegativityGI = 0,
   PositivityGI = 0,
-  
   SentimentHE = 0,
   NegativityHE = 0,
   PositivityHE = 0,
-  
   SentimentLM = 0,
   NegativityLM = 0,
   PositivityLM = 0,
   RatioUncertaintyLM = 0,
-  
   SentimentQDAP = 0,
   NegativityQDAP = 0,
   PositivityQDAP = 0
@@ -74,9 +71,7 @@ sentiment_df = function(tweets) {
     text$PositivityQDAP = sentiment$PositivityQDAP
     text$word_count = sentiment$WordCount
     
-    df = rbind(text,df)
+    df = rbind(text, df)
   }
 }
 sentiment_df(tweets = tt)
-
-
