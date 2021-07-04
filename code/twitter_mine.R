@@ -1,18 +1,29 @@
-# Twitter key ------------------------------------------------------------
-bearer_token = "AAAAAAAAAAAAAAAAAAAAAMNaJwEAAAAAJt1NQBowbyVGaYV%2Bl7vAjpOz2Es%3DEu27lmCWSm9kZhWdEUlczZsvVAZRbDj4buLuR5tbttjr6BGzPY"
-
 if (file.exists("data/tweet_sentiment_scores.csv")) {
   tweets = read.csv("data/tweet_sentiment_scores.csv")
 } else {
   # Twitter Mine ------------------------------------------------------------
   tweets = get_all_tweets(
-    "@EnvAgency OR @EnvAgencyYNE OR @EnvAgencyNW OR @EnvAgencySE OR @EnvAgencySW OR @envagencymids OR @EnvAgencyAnglia lang:en -is:retweet",
-    "2021-01-01T00:00:00Z",
-    "2021-01-06T00:00:00Z",
-    bearer_token,
-    data_path = "data/",
-    bind_tweets = TRUE
+    query = c(
+      "EnvAgency",
+      "EnvAgencyYNE",
+      "EnvAgencyNW",
+      "EnvAgencySE",
+      "EnvAgencySW",
+      "envagencymids",
+      "EnvAgencyAnglia"
+    ),
+    is_retweet = FALSE,
+    lang = "en",
+    start_tweets = "2020-06-01T00:00:00Z",
+    end_tweets = "2021-06-01T00:00:00Z",
+    bearer_token = get_bearer(),
+    data_path = "data6/",
+    bind_tweets = TRUE,
+    context_annotations = FALSE,
+    page_n = 500,
+    n = Inf
   )
+  
   # Clean data ------------------------------------------------------------
   tweets_text = as.data.frame(subset(
     tweets,

@@ -1,7 +1,6 @@
 # Set pkgs
 pkgs = c(
   "tidyverse",
-  "academictwitteR",
   "tm",
   "tidytext",
   "sentimentr",
@@ -20,3 +19,7 @@ if (any(installed_packages == FALSE)) {
 
 # Load pkgs
 invisible(lapply(pkgs, library, character.only = TRUE))
+
+#Load dev version of academictwitteR
+devtools::install_github("cjbarrie/academictwitteR", build_vignettes = TRUE)
+require(academictwitteR)
