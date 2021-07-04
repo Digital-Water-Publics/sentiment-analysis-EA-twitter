@@ -74,4 +74,4 @@ sentiment_df = function(tweets) {
     df = rbind(text, df)
   }
 }
-# test sentiment_df(tweets = tt)
+senti_tt = sentiment_df(tweets = tt)
