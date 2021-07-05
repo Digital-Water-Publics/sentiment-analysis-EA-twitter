@@ -14,5 +14,5 @@ clean_tweets = function(tweets_text) {
 
 
 # Create text only data-frame ---------------------------------------------
-tweets_text_single = as.data.frame(subset(tt,
+tweets_text_single = as.data.frame(subset(tweets,
                           select = c("text")))

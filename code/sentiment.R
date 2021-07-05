@@ -22,18 +22,17 @@ df = data.frame (
   NegativityQDAP = 0,
   PositivityQDAP = 0
 )
-
+counter = 0
 sentiment_df = function(tweets) {
   for (i in 1:nrow(tweets)) {
+    #Set first tweet as text
     text = tweets$text[i]
     text = as.data.frame(text)
     #tokenize text
     token = data.frame(text = text, stringsAsFactors = FALSE) %>%
       unnest_tokens(word, text)
-    
     #match sentiment words from the 'NRC' sentiment lexicon
     senti = inner_join(token, get_sentiments("nrc"))
-    
     #save specific words in tweets with emotional lex pair
     emo_words = as.character(unique(senti$word))
     st = paste(emo_words, collapse = ", ")
@@ -48,31 +47,29 @@ sentiment_df = function(tweets) {
     names = names(tt[tt == max(tt)])
     nt = paste(names, collapse = " ")
     text$key_emotion = nt
-    
-    sentiment_support = sentiment_by(get_sentences(tweets_text_single$text[i]))
+    #Calculate various sentiment scores
+    sentiment_support = sentiment_by(get_sentences(tweets$text[i]))
     text$av_sentiment_score = sentiment_support$ave_sentiment
-    
-    sentiment = analyzeSentiment(tweets_text_single$text[i])
-    
+    sentiment = analyzeSentiment(tweets$text[i])
     text$SentimentGI = sentiment$SentimentGI
     text$NegativityGI = sentiment$NegativityGI
     text$PositivityGI = sentiment$PositivityGI
-    
     text$SentimentHE = sentiment$SentimentHE
     text$NegativityHE = sentiment$NegativityHE
     text$PositivityHE = sentiment$PositivityHE
-    
     text$SentimentLM = sentiment$SentimentLM
     text$NegativityLM = sentiment$NegativityLM
     text$PositivityLM = sentiment$PositivityLM
     text$RatioUncertaintyLM = sentiment$RatioUncertaintyLM
-    
     text$SentimentQDAP = sentiment$SentimentQDAP
     text$NegativityQDAP = sentiment$NegativityQDAP
     text$PositivityQDAP = sentiment$PositivityQDAP
     text$word_count = sentiment$WordCount
-    
+    #Update and print counter
+    counter <<- counter +1
+    print(counter)
+    #Bind DF
     df = rbind(text, df)
   }
 }
-senti_tt = sentiment_df(tweets = tt)
+senti_tt = sentiment_df(tweets = tweets)
