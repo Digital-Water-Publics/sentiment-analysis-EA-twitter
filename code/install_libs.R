@@ -21,5 +21,5 @@ if (any(installed_packages == FALSE)) {
 invisible(lapply(pkgs, library, character.only = TRUE))
 
 #Load dev version of academictwitteR
-devtools::install_github("cjbarrie/academictwitteR", build_vignettes = TRUE)
+#devtools::install_github("cjbarrie/academictwitteR", build_vignettes = TRUE)
 require(academictwitteR)

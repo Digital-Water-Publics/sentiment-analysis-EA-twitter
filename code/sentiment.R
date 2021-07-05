@@ -1,11 +1,12 @@
 # Create dataframe containing all sentiment scores ------------------------
 # mock df
+# TODO to look at adding more computationally linguistics at the entity level
 df = data.frame (
-  text = c("this is a test tweet"),
+  text = c("this is a disgusting"),
   word_count = 20,
-  emo_lex = c("test"),
-  emotion = c("anticipation"),
-  key_emotion = c("anticipation"),
+  emo_lex = c("disgusting"),
+  emotion = c("disgust"),
+  key_emotion = c("disgust"),
   av_sentiment_score = 0,
   SentimentGI = 0,
   NegativityGI = 0,
