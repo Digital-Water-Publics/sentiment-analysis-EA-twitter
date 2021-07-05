@@ -24,9 +24,7 @@ df = data.frame (
 )
 counter = 0
 sentiment_df = function(tweets) {
-  for (i in 1:nrow(tweets)) {
-    #Set first tweet as text
-    text = tweets$text[i]
+    text = tweets$text
     text = as.data.frame(text)
     #tokenize text
     token = data.frame(text = text, stringsAsFactors = FALSE) %>%
@@ -48,9 +46,9 @@ sentiment_df = function(tweets) {
     nt = paste(names, collapse = " ")
     text$key_emotion = nt
     #Calculate various sentiment scores
-    sentiment_support = sentiment_by(get_sentences(tweets$text[i]))
+    sentiment_support = sentiment_by(get_sentences(tweets$text))
     text$av_sentiment_score = sentiment_support$ave_sentiment
-    sentiment = analyzeSentiment(tweets$text[i])
+    sentiment = analyzeSentiment(tweets$text)
     text$SentimentGI = sentiment$SentimentGI
     text$NegativityGI = sentiment$NegativityGI
     text$PositivityGI = sentiment$PositivityGI
@@ -70,6 +68,8 @@ sentiment_df = function(tweets) {
     print(counter)
     #Bind DF
     df = rbind(text, df)
-  }
 }
+apply(tweets,1,sentiment_df(tweets = tweets))
+
+
 senti_tt = sentiment_df(tweets = tweets)

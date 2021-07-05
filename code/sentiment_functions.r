@@ -3,7 +3,7 @@
 ### 1. General sentiment function and viz
 general_nrc_sentiment = function(corpus) {
   #token df
-  token = data.frame(text = tt, stringsAsFactors = FALSE) %>%
+  token = data.frame(text = corpus, stringsAsFactors = FALSE) %>%
     unnest_tokens(word, text)
   
   #Matching sentiment words from the 'NRC' sentiment lexicon
@@ -31,11 +31,11 @@ general_nrc_sentiment = function(corpus) {
       ),
     )
 }
-# test general_nrc_sentiment(corpus = tweets_text)
+# test general_nrc_sentiment(corpus = tweets_text_single)
 
 ### 2. Entity (word) sentiment function and viz
 entity_nrc_sentiment = function(word) {
-  corpus = corpus(tweets_text$text)
+  corpus = corpus(tweets_text_single$text)
   corpus = (corpus_water = subset(corpus, grepl(word, texts(corpus))))
   token_word = data.frame(text = corpus, stringsAsFactors = FALSE) %>% unnest_tokens(word, text)
   senti_word = inner_join(token_word, get_sentiments("nrc")) %>%
@@ -58,7 +58,7 @@ entity_nrc_sentiment = function(word) {
       ),
     )
 }
-#test sentimentPerWord(word = "river")
+# test entity_nrc_sentiment(word = "pollut")
 
 ## Polarity (pos-neg) Sentiment Functions
 ### 3. General sentiment polarity function and histogram
