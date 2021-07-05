@@ -41,7 +41,7 @@ sentiment_df = function(tweets) {
     emotion = as.character(unique(senti$sentiment))
     et = paste(emotion, collapse = " ")
     text$emotion = et
-    #save skey/most frequent emotions
+    #save key/most frequent emotions
     x = c(senti$sentiment)
     tt = table(x)
     names = names(tt[tt == max(tt)])
