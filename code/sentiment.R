@@ -22,54 +22,56 @@ df = data.frame (
   NegativityQDAP = 0,
   PositivityQDAP = 0
 )
+#Start counter
 counter = 0
-sentiment_df = function(tweets) {
-    text = tweets$text
-    text = as.data.frame(text)
-    #tokenize text
-    token = data.frame(text = text, stringsAsFactors = FALSE) %>%
-      unnest_tokens(word, text)
-    #match sentiment words from the 'NRC' sentiment lexicon
-    senti = inner_join(token, get_sentiments("nrc"))
-    #save specific words in tweets with emotional lex pair
-    emo_words = as.character(unique(senti$word))
-    st = paste(emo_words, collapse = ", ")
-    text$emo_lex = st
-    #save specific emotion based on word
-    emotion = as.character(unique(senti$sentiment))
-    et = paste(emotion, collapse = " ")
-    text$emotion = et
-    #save key/most frequent emotions
-    x = c(senti$sentiment)
-    tt = table(x)
-    names = names(tt[tt == max(tt)])
-    nt = paste(names, collapse = " ")
-    text$key_emotion = nt
-    #Calculate various sentiment scores
-    sentiment_support = sentiment_by(get_sentences(tweets$text))
-    text$av_sentiment_score = sentiment_support$ave_sentiment
-    sentiment = analyzeSentiment(tweets$text)
-    text$SentimentGI = sentiment$SentimentGI
-    text$NegativityGI = sentiment$NegativityGI
-    text$PositivityGI = sentiment$PositivityGI
-    text$SentimentHE = sentiment$SentimentHE
-    text$NegativityHE = sentiment$NegativityHE
-    text$PositivityHE = sentiment$PositivityHE
-    text$SentimentLM = sentiment$SentimentLM
-    text$NegativityLM = sentiment$NegativityLM
-    text$PositivityLM = sentiment$PositivityLM
-    text$RatioUncertaintyLM = sentiment$RatioUncertaintyLM
-    text$SentimentQDAP = sentiment$SentimentQDAP
-    text$NegativityQDAP = sentiment$NegativityQDAP
-    text$PositivityQDAP = sentiment$PositivityQDAP
-    text$word_count = sentiment$WordCount
-    #Update and print counter
-    counter <<- counter +1
-    print(counter)
-    #Bind DF
-    df = rbind(text, df)
+#Function to create senti results
+senti_df = function(tweets) {
+  #Set first tweet
+  text = tweets$text[1]
+  text = as.data.frame(text)
+  #tokenize text
+  token = data.frame(text = text, stringsAsFactors = FALSE) %>%
+    unnest_tokens(word, text)
+  #match sentiment words from the 'NRC' sentiment lexicon
+  senti = inner_join(token, get_sentiments("nrc"))
+  #save specific words in tweets with emotional lex pair
+  emo_words = as.character(unique(senti$word))
+  st = paste(emo_words, collapse = ", ")
+  text$emo_lex = st
+  #save specific emotion based on word
+  emotion = as.character(unique(senti$sentiment))
+  et = paste(emotion, collapse = " ")
+  text$emotion = et
+  #save key/most frequent emotions
+  x = c(senti$sentiment)
+  tt = table(x)
+  names = names(tt[tt == max(tt)])
+  nt = paste(names, collapse = " ")
+  text$key_emotion = nt
+  #Calculate various sentiment scores
+  sentiment_support = sentiment_by(get_sentences(tweets$text[i]))
+  text$av_sentiment_score = sentiment_support$ave_sentiment
+  sentiment = analyzeSentiment(tweets$text[i])
+  text$SentimentGI = sentiment$SentimentGI
+  text$NegativityGI = sentiment$NegativityGI
+  text$PositivityGI = sentiment$PositivityGI
+  text$SentimentHE = sentiment$SentimentHE
+  text$NegativityHE = sentiment$NegativityHE
+  text$PositivityHE = sentiment$PositivityHE
+  text$SentimentLM = sentiment$SentimentLM
+  text$NegativityLM = sentiment$NegativityLM
+  text$PositivityLM = sentiment$PositivityLM
+  text$RatioUncertaintyLM = sentiment$RatioUncertaintyLM
+  text$SentimentQDAP = sentiment$SentimentQDAP
+  text$NegativityQDAP = sentiment$NegativityQDAP
+  text$PositivityQDAP = sentiment$PositivityQDAP
+  text$word_count = sentiment$WordCount
+  #Update and print counter
+  counter <<- counter + 1
+  print(counter)
+  #Bind DF
+  df <<- rbind(text, df)
 }
-apply(tweets,1,sentiment_df(tweets = tweets))
+##Loop function based on number of rows
+for (i in 1:nrow(sample_tweets)){senti_df(tweets = sample_tweets)}
 
-
-senti_tt = sentiment_df(tweets = tweets)
