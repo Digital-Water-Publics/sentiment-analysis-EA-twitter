@@ -24,10 +24,11 @@ df = data.frame (
 )
 #Start counter
 counter = 0
+tweet_vector = as.vector(t(tweets_text_single))
 #Function to create senti results
 senti_df = function(tweets) {
   #Set first tweet
-  text = tweets$text[1]
+  text = a[i]
   text = as.data.frame(text)
   #tokenize text
   token = data.frame(text = text, stringsAsFactors = FALSE) %>%
@@ -49,9 +50,9 @@ senti_df = function(tweets) {
   nt = paste(names, collapse = " ")
   text$key_emotion = nt
   #Calculate various sentiment scores
-  sentiment_support = sentiment_by(get_sentences(tweets$text[i]))
+  sentiment_support = sentiment_by(get_sentences(tweets[i]))
   text$av_sentiment_score = sentiment_support$ave_sentiment
-  sentiment = analyzeSentiment(tweets$text[i])
+  sentiment = analyzeSentiment(tweets[i])
   text$SentimentGI = sentiment$SentimentGI
   text$NegativityGI = sentiment$NegativityGI
   text$PositivityGI = sentiment$PositivityGI
@@ -73,5 +74,5 @@ senti_df = function(tweets) {
   df <<- rbind(text, df)
 }
 ##Loop function based on number of rows
-for (i in 1:nrow(sample_tweets)){senti_df(tweets = sample_tweets)}
+for (i in 1:nrow(tweets_text_single)){senti_df(tweets = tweet_vector)}
 
