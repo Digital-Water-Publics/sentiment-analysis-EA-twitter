@@ -49,6 +49,8 @@ senti_df = function(tweets) {
   names = names(tt[tt == max(tt)])
   nt = paste(names, collapse = " ")
   text$key_emotion = nt
+  #word count
+  text$word_count = sentiment$WordCount
   #Calculate various sentiment scores
   sentiment_support = sentiment_by(get_sentences(tweets[i]))
   text$av_sentiment_score = sentiment_support$ave_sentiment
@@ -66,7 +68,6 @@ senti_df = function(tweets) {
   text$SentimentQDAP = sentiment$SentimentQDAP
   text$NegativityQDAP = sentiment$NegativityQDAP
   text$PositivityQDAP = sentiment$PositivityQDAP
-  text$word_count = sentiment$WordCount
   #Update and print counter
   counter <<- counter + 1
   print(counter)
