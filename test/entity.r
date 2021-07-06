@@ -1,5 +1,5 @@
-install.packages("spacyr")
-library(spacyr)
 spacy_install()
 
-spacy_initialize(model = "en_core_web_sm")
+sample_data = sample_n(tweets_text_single,5)
+
+parsedtxt = spacy_parse(sample_data$text)

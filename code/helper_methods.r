@@ -1,9 +1,8 @@
 tweets_text_single = as.data.frame(subset(tweets,
                                             select = c("text")))
 # Clean tweets ------------------------------------------------------------
-tidy_tweets_option = yes
 
-if(tweets_text_single){
+if(exists("tweets_text_single")){
   tweets_text_single$text = gsub("(RT|via)((?:\\b\\W*@\\w+)+)", "", tweets_text_single$text)  # Remove the "RT" (retweet) and usernames
   tweets_text_single$text = gsub("http.+ |http.+$", " ", tweets_text_single$text)  # Remove html links
   tweets_text_single$text = gsub("http[[:alnum:]]*", "", tweets_text_single$text) # Remove html links
@@ -25,6 +24,8 @@ if(tweets_text_single){
   tweets_text_single$text = gsub("got", " ", tweets_text_single$text) # remove got
   tweets_text_single$text = gsub("way", " ", tweets_text_single$text) # remove way
   tweets_text_single$text = gsub("one", " ", tweets_text_single$text) # remove one
+  tweets_text_single$text = removeWords(tweets_text_single$text, stopwords("english"))
+  tweets_text_single$text = stripWhitespace(tweets_text_single$text)
 } else{
   message("tweets are not cleaned")
 }

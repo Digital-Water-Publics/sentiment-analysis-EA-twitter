@@ -8,7 +8,8 @@ pkgs = c(
   "quanteda",
   "SentimentAnalysis",
   "RTextTools",
-  "e1071"
+  "e1071",
+  "spacyr"
 )
 
 # Install pkgs not yet installed
