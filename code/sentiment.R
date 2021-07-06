@@ -28,7 +28,7 @@ tweet_vector = as.vector(t(tweets_text_single))
 #Function to create senti results
 senti_df = function(tweets) {
   #Set first tweet
-  text = a[i]
+  text = tweets[i]
   text = as.data.frame(text)
   #tokenize text
   token = data.frame(text = text, stringsAsFactors = FALSE) %>%
