@@ -1,9 +1,10 @@
 tweets_text_single = as.data.frame(subset(tweets,
                                             select = c("text")))
-# Clean tweets ------------------------------------------------------------
 
-if(exists("tweets_text_single")){
-  tweets_text_single$text = gsub("(RT|via)((?:\\b\\W*@\\w+)+)", "", tweets_text_single$text)  # Remove the "RT" (retweet) and usernames
+tweets_text_single = sample_n(tweets_text_single,100)
+
+#Clean tweets for frequency analysis
+for (i in 1:nrow(tweets_text_single)){
   tweets_text_single$text = gsub("http.+ |http.+$", " ", tweets_text_single$text)  # Remove html links
   tweets_text_single$text = gsub("http[[:alnum:]]*", "", tweets_text_single$text) # Remove html links
   tweets_text_single$text = gsub("[[:punct:]]", " ", tweets_text_single$text)  # Remove punctuation
@@ -26,6 +27,31 @@ if(exists("tweets_text_single")){
   tweets_text_single$text = gsub("one", " ", tweets_text_single$text) # remove one
   tweets_text_single$text = removeWords(tweets_text_single$text, stopwords("english"))
   tweets_text_single$text = stripWhitespace(tweets_text_single$text)
-} else{
-  message("tweets are not cleaned")
 }
+
+#Clean tweets for sentiment
+clean_tweets_sentiment = function(x) {
+  x %>%
+    # Remove URLs
+    str_remove_all(" ?(f|ht)(tp)(s?)(://)(.*)[.|/](.*)") %>%
+    # Remove mentions e.g. "@my_account"
+    str_remove_all("@[[:alnum:]_]{4,}") %>%
+    # Remove hashtags
+    str_remove_all("#[[:alnum:]_]+") %>%
+    # Replace "&" character reference with "and"
+    str_replace_all("&amp;", "and") %>%
+    # Remove puntucation, using a standard character class
+    str_remove_all("[[:punct:]]") %>%
+    # Remove "RT: " from beginning of retweets
+    str_remove_all("^RT:? ") %>%
+    # Replace any newline characters with a space
+    str_replace_all("\\\n", " ") %>%
+    # Make everything lowercase
+    str_to_lower() %>%
+    # Remove any trailing whitespace around the text
+    str_trim("both")
+}
+
+
+  
+
