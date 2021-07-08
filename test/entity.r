@@ -1,9 +1,10 @@
 # for first use run: spacy_install()
 # & spacy_initialize()
 #sample of data
-sample_data = sample_n(tweets_text_single,
-                       1)
+sample_data = sample_n(tweets_text_single,1)
 
+sample_data = as.data.frame(sample_data %>% clean_tweets_sentiment()) %>% rename(text = "sample_data %>% clean_tweets_sentiment()")
+  
 #Parse text and calculate computational linguistics using spacy.io API
 parsedtxt = spacy_parse(
   sample_data$text,
@@ -17,13 +18,27 @@ parsedtxt = spacy_parse(
 ) %>%
   rename(word = token) %>%
   left_join(get_sentiments("nrc"))
-# Get sentiment with largest count
 
+# Get sentiment with largest count
 emotion =  names(table(parsedtxt$sentiment))[as.vector(table(parsedtxt$sentiment)) ==
                                                max(table(parsedtxt$sentiment))]
-st = paste(emotion, collapse = ", ")
-parsedtxt$key_emotion = st
-t = spacy_extract_nounphrases(sample_data$text, output = "data.frame")
+emotion = paste(emotion, collapse = " OR ")
+
+emotion_direction = " @"
+
+emotion_phrase = paste(emotion,emotion_direction, sep = "")
+
+nounphrase_entity = spacy_extract_nounphrases(sample_data$text, output = "data.frame")
+
+nounphrase_entity = names(table(nounphrase_entity$text))[as.vector(table(nounphrase_entity$text)) == 
+                            unique(table(nounphrase_entity$text))]
+
+nounphrase_entity_df = as.data.frame(nounphrase_entity)
+
+for (i in 1:nrow(nounphrase_entity_df)){
+   nounphrase_entity_df$nounphrase_entity[i] = paste(emotion_phrase, nounphrase_entity_df$nounphrase_entity[i])
+}
+
 
 # Logical rules for entity
 # 1. Merge sentiment with tweet token

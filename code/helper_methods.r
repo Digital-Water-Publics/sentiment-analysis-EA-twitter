@@ -1,3 +1,4 @@
+#Clean tweets for frequency analysis
 if(exists("tweets_text_single")) {
   for (i in 1:nrow(tweets_text_single)){
     env_mentions = iconv(tweets_text_single$text, to = "ASCII", sub = " ") # Convert to basic ASCII text to avoid silly characters
@@ -26,8 +27,6 @@ if(exists("tweets_text_single")) {
     tweets_text_single$text = stripWhitespace(tweets_text_single$text)
   }
 }
-#Clean tweets for frequency analysis
-
 #Clean tweets for sentiment
 clean_tweets_sentiment = function(x) {
   x %>%
