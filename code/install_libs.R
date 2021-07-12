@@ -9,7 +9,8 @@ pkgs = c(
   "SentimentAnalysis",
   "RTextTools",
   "e1071",
-  "spacyr"
+  "spacyr",
+  "academictwitteR"
 )
 
 # Install pkgs not yet installed
@@ -20,7 +21,3 @@ if (any(installed_packages == FALSE)) {
 
 # Load pkgs
 invisible(lapply(pkgs, library, character.only = TRUE))
-
-#Load dev version of academictwitteR
-#devtools::install_github("cjbarrie/academictwitteR", build_vignettes = TRUE)
-require(academictwitteR)
