@@ -24,11 +24,12 @@ df = data.frame (
 )
 #Start counter
 counter = 0
-tweet_vector = as.vector(t(tweets_text_single))
+tweet_vector = as.vector(t(sample_data$text))
+
 #Function to create senti results
 senti_df = function(tweets) {
   #Set first tweet
-  text = tweets[i]
+  text = sample_data$text[i]
   text = as.data.frame(text)
   #tokenize text
   token = data.frame(text = text, stringsAsFactors = FALSE) %>%
@@ -75,5 +76,5 @@ senti_df = function(tweets) {
   df <<- rbind(text, df)
 }
 ##Loop function based on number of rows
-for (i in 1:nrow(tweets_text_single)){senti_df(tweets = tweet_vector)}
+for (i in 1:nrow(sample_data)){senti_df(tweets = sample_data$text)}
 
