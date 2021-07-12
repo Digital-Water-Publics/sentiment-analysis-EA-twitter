@@ -100,3 +100,9 @@ entity_sentiment_string <- function(data) {
 # 3. Add new column string e.g. "angry @ supply network"
 # 4. Add polarity sentiment score
 # 5. Export
+
+tweets = tweets %>% rename(word = text)
+nrc = tweets %>%
+  inner_join(get_sentiments("nrc"),by = "word")
+
+tweets = tweets$word %>% clean_tweets_sentiment()
