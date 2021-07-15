@@ -13,7 +13,7 @@ source("../code/install_libs.R")
 Column {data-width=550}
 -----------------------------------------------------------------------
 
-### Noun Frequency (top 30)
+### Noun Frequency (top 50)
 
 ```{r}
   noun_freq = read.csv("../data/noun_freq.csv")
@@ -27,7 +27,7 @@ Column {data-width=550}
 Column {data-width=550}
 -----------------------------------------------------------------------
 
-### Adjective frequency (top 30)
+### Adjective frequency (top 50)
 
 ```{r}
   adjFreq = read.csv("../data/adj_freq.csv")
