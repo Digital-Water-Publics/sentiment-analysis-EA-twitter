@@ -1,0 +1,39 @@
+---
+title: "Sentiment dashboard for computationally challenged Helge"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+source("../code/install_libs.R")
+```
+
+Column {data-width=550}
+-----------------------------------------------------------------------
+
+### Noun Frequency (top 30)
+
+```{r}
+  noun_freq = read.csv("../data/noun_freq.csv")
+  nounFreq_30 = noun_freq[(1:50),]
+  
+  ggplot(nounFreq_30, aes(x = reorder(lemma, n), y = n)) +
+    geom_bar(stat = "identity") +
+    coord_flip()
+```
+
+Column {data-width=550}
+-----------------------------------------------------------------------
+
+### Adjective frequency (top 30)
+
+```{r}
+  adjFreq = read.csv("../data/adj_freq.csv")
+  adjFreq = adjFreq[(1:50),]
+  
+  ggplot(adjFreq, aes(x = reorder(lemma, n), y = n)) +
+    geom_bar(stat = "identity") +
+    coord_flip()
+```

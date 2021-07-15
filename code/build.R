@@ -8,10 +8,6 @@ if(mine_build){
   source("code/twitter_mine.R")
 }
 
-tweets_2021 = read.csv("data/tweets_2021.csv")
-tweets_2021_single = subset(tweets_2021,
-                            select = text)
-
 # Helper methods --------------------------------------------------------
 source("code/helper_methods.r")
 
