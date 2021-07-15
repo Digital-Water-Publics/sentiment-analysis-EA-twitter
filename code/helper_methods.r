@@ -21,28 +21,13 @@ clean_tweets_sentiment = function(x) {
     str_trim("both")
 }
 
-#Subset data to only include tweet
-if(exists("tweets")){
-  tweets_text_single = as.data.frame(subset(tweets,
-                                            select = c("text")))
-}
-#Time conversion
-twitter_to_POSIXct = function(x, timezone = Sys.timezone()){
+if(file.exists("data/ea_mentions_2017_2021_cleaned.csv")){
+  clean_tweets = read.csv("data/ea_mentions_2017_2021_cleaned.csv")
+} else {
+  tweets = read.csv("data/ea_mentions_2017_2021.csv")
+  clean_tweets = tweets$text %>% clean_tweets_sentiment()
+  clean_tweets =  as.vector(clean_tweets)
+  clean_tweets = removeWords(clean_tweets, words = stopwords("english"))
   
-  x %>% 
-    strsplit("\\s+") %>% 
-    unlist %>% 
-    t %>% 
-    as.data.frame(stringsAsFactors = FALSE) %>% 
-    set_colnames(c("week_day", "month_abb", 
-                   "day", "hour", "tz", 
-                   "year")) %>%
-    mutate(month_num = which(month.abb %in% month_abb)) %>% 
-    mutate(date_str = paste0(year, "-", month_num, "-", day, " ", 
-                             hour)) %>% 
-    mutate(date = format(as.POSIXct(date_str, tz = tz), 
-                         tz = timezone)) %>%
-    pull(date)
-  
+  write.csv(clean_tweets, "data/ea_mentions_2017_2021_cleaned.csv")
 }
-

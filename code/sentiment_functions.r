@@ -18,7 +18,6 @@ general_nrc_sentiment = function(corpus) {
     geom_bar(aes(fill = sentiment), position = 'stack', stat = 'identity') +
     ggtitle("(NRC EMO-LEX) \nEmotional Sentiment for Environment Agency \nmentions on Twitter") +
     coord_flip() +
-    coord_polar() +
     theme(
       plot.background = element_rect(fill = "black", colour = NA),
       panel.background = element_rect(fill = "black", colour = NA),
@@ -31,7 +30,7 @@ general_nrc_sentiment = function(corpus) {
       ),
     )
 }
-# test general_nrc_sentiment(corpus = tweets_text_single)
+# test general_nrc_sentiment(corpus = clean_tweets)
 
 ### 2. Entity (word) sentiment function and viz
 entity_nrc_sentiment = function(word) {

@@ -53,7 +53,8 @@ if(file.exists("data/noun_freq.csv")){
   #Write csv
   write.csv(parsed_sub, "data/noun_freq.csv")
 }
-
+#Set upn Spacy
+spacy_initialize()
 # Frequency analysis for adjectives---------------------------------------------------------------
 if(file.exists("data/adj_freq.csv")){
   adjFreq = read.csv("data/adj_freq.csv")
@@ -86,27 +87,39 @@ if(file.exists("data/adj_freq.csv")){
 
 
 # Extract nounphrases -----------------------------------------------------
-nounphrase_text = spacy_extract_nounphrases(text$text,
-                                            output = c("data.frame"),
-                                            multithread = TRUE)
+if(file.exists("data/nounphrase_freq.csv")){
+  
+  nounphrase_text_sub_head = nounphrase_text_sub[(1:30),]
+  
+  ggplot(nounphrase_text_sub_head, aes(x = reorder(text, n), y = n)) +
+    geom_bar(stat = "identity") +
+    coord_flip()
+} else {
+  nounphrase_text = spacy_extract_nounphrases(clean_tweets,
+                                              output = c("data.frame"),
+                                              multithread = TRUE)
+  
+  nounphrase_text_sub = nounphrase_text %>%
+    filter(length > 2) %>%
+    select(text) %>%
+    mutate(text = str_remove_all(text, regex(" ?(f|ht)(tp)(s?)(://)(.*)[.|/](.*)"))) %>%
+    mutate(text = str_remove_all(text, regex("@[[:alnum:]_]{4,}"))) %>%
+    mutate(text = str_remove_all(text, regex("#[[:alnum:]_]+"))) %>%
+    mutate(text = str_remove_all(text, regex("[[:punct:]]"))) %>%
+    mutate(text = str_remove_all(text, regex("^RT:? "))) %>%
+    mutate(text = str_replace(text, "amp", "and")) %>%
+    anti_join(stop_words, by = c("text" = "word")) %>%
+    mutate(text = str_to_lower(text)) %>%
+    # Remove any trailing whitespace around the text
+    mutate(text = str_trim(text, "both")) %>%
+    count(text) %>%
+    arrange(desc(n))
+  
+  #test
+  head(nounphrase_text_sub)
+  write.csv(nounphrase_text_sub, "data/nounphrase_freq.csv")
+}
 
-nounphrase_text_sub = nounphrase_text %>%
-  filter(length > 1) %>%
-  select(text) %>%
-  mutate(text = str_remove_all(text, regex(" ?(f|ht)(tp)(s?)(://)(.*)[.|/](.*)"))) %>%
-  mutate(text = str_remove_all(text, regex("@[[:alnum:]_]{4,}"))) %>%
-  mutate(text = str_remove_all(text, regex("#[[:alnum:]_]+"))) %>%
-  mutate(text = str_remove_all(text, regex("[[:punct:]]"))) %>%
-  mutate(text = str_remove_all(text, regex("^RT:? "))) %>%
-  mutate(text = str_replace(text, "amp", "and")) %>%
-  anti_join(stop_words, by = c("text" = "word")) %>%
-  mutate(text = str_to_lower(text)) %>%
-  dplyr::filter(!(text=="")) %>%
-  count(text) %>%
-  arrange(desc(n))
-nounphrase_text_sub = nounphrase_text_sub[-c(1,2,4,5,7),]
-#test
-head(nounphrase_text_sub)
 
 #Extract entities 
 entity_text = spacy_extract_entity(text$text,

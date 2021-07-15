@@ -8,8 +8,11 @@ output:
 
 ```{r setup, include=FALSE}
 source("../code/install_libs.R")
+source("../code/helper_methods.r")
 ```
 
+Frequency
+=======================================================================
 Column {data-width=550}
 -----------------------------------------------------------------------
 
@@ -36,4 +39,44 @@ Column {data-width=550}
   ggplot(adjFreq, aes(x = reorder(lemma, n), y = n)) +
     geom_bar(stat = "identity") +
     coord_flip()
+```
+General Sentiment
+=======================================================================
+Column {data-width=550}
+-----------------------------------------------------------------------
+
+### Adjective frequency (top 50)
+```{r}
+
+tweets = read.csv("../data/ea_mentions_2017_2021.csv")
+clean_tweets = tweets$text %>% clean_tweets_sentiment()
+clean_tweets =  as.vector(clean_tweets)
+clean_tweets <- removeWords(clean_tweets, words = stopwords("english"))
+  token = data.frame(text = corpus, stringsAsFactors = FALSE) %>%
+    unnest_tokens(word, text)
+  
+  #Matching sentiment words from the 'NRC' sentiment lexicon
+  senti = inner_join(token, get_sentiments("nrc")) %>%
+    count(sentiment) %>%
+    arrange(sentiment)
+  
+  senti$percent = (senti$n / sum(senti$n)) * 100
+  
+  #Plotting the sentiment summary
+  ggplot(senti, aes(sentiment, percent)) +
+    geom_bar(aes(fill = sentiment), position = 'stack', stat = 'identity') +
+    ggtitle("(NRC EMO-LEX) \nEmotional Sentiment for Environment Agency \nmentions on Twitter") +
+    coord_flip() +
+    coord_polar() +
+    theme(
+      plot.background = element_rect(fill = "black", colour = NA),
+      panel.background = element_rect(fill = "black", colour = NA),
+      legend.position = "none",
+      axis.text = element_text(color = "white"),
+      text = element_text(
+        size = 16,
+        family = "times",
+        colour = "white"
+      ),
+    )
 ```
