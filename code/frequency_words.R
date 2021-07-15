@@ -1,4 +1,6 @@
 # Word frequency ----------------------------------------------------------
+#Set up Spacy
+spacy_initialize()
 #Read data
 tweets = read.csv("data/ea_mentions_2017_2021.csv")
 #Subset to only include tweet
@@ -53,8 +55,7 @@ if(file.exists("data/noun_freq.csv")){
   #Write csv
   write.csv(parsed_sub, "data/noun_freq.csv")
 }
-#Set upn Spacy
-spacy_initialize()
+
 # Frequency analysis for adjectives---------------------------------------------------------------
 if(file.exists("data/adj_freq.csv")){
   adjFreq = read.csv("data/adj_freq.csv")
@@ -121,7 +122,39 @@ if(file.exists("data/nounphrase_freq.csv")){
 }
 
 
-#Extract entities 
-entity_text = spacy_extract_entity(text$text,
-                                   output = c("data.frame"),
-                                   multithread = TRUE)
+if(file.exists("data/entity_text_freq.csv")){
+  entity_text_sub = read.csv("data/entity_text_freq.csv")
+  entity_type_sub = read.csv("data/entity_type_freq.csv")
+} else {
+  #Extract entities 
+  entity_text = spacy_extract_entity(tweets$text,
+                                     output = c("data.frame"),
+                                     multithread = TRUE)
+  
+  entity_text_sub = entity_text %>%
+    select(text) %>%
+    mutate(text = str_remove_all(text, regex(" ?(f|ht)(tp)(s?)(://)(.*)[.|/](.*)"))) %>%
+    mutate(text = str_remove_all(text, regex("@[[:alnum:]_]{4,}"))) %>%
+    mutate(text = str_remove_all(text, regex("#[[:alnum:]_]+"))) %>%
+    mutate(text = str_remove_all(text, regex("[[:punct:]]"))) %>%
+    mutate(text = str_remove_all(text, regex("^RT:? "))) %>%
+    mutate(text = str_replace(text, "amp", "and")) %>%
+    anti_join(stop_words, by = c("text" = "word")) %>%
+    mutate(text = str_to_lower(text)) %>%
+    mutate(text = str_trim(text, "both")) %>%
+    count(text) %>%
+    arrange(desc(n))
+  
+  entity_text_sub = entity_text_sub[-c(1),]
+  head(entity_text_sub)
+  
+  write.csv(entity_text_sub,"data/entity_text_freq.csv")
+  
+  entity_type_sub = entity_text %>%
+    count(ent_type) %>%
+    arrange(desc(n))
+  
+  write.csv(entity_type_sub,"data/entity_type_freq.csv")
+}
+#Termiante spacy session
+spacy_finalize()
