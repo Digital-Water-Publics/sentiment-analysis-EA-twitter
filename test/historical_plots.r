@@ -29,3 +29,21 @@ tweets$created_at = substr(tweets$created_at, start = 1, stop = 10)
     filter(substr(created_at, 1, 4) == "2020")
 }
 
+tweets$year = substr(tweets$created_at,1,4)
+
+ggplot(tweets, aes(x=year, y=tweets$senti$sentiment, fill=year)) + # fill=name allow to automatically dedicate a color for each group
+geom_violin()
+
+
+# Calculate proportion of each level
+proportion <- table(tweets$year)/nrow(tweets)
+
+#Draw the boxplot, with the width proportionnal to the occurence !
+boxplot(
+  tweets$senti$sentiment ~ tweets$year ,
+  width = proportion ,
+  col = c("honeydew2" , "seagreen2"),
+  main = "Sentiment polarity score 2016-2021",
+  xlab = "Year",
+  ylab = "Polarity Score"
+)

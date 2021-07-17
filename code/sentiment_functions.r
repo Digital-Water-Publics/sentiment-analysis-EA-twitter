@@ -44,7 +44,6 @@ entity_nrc_sentiment = function(word) {
     geom_bar(aes(fill = sentiment), position = 'stack', stat = 'identity') +
     ggtitle(paste(word, sep = " ", "word sentiment \nfrom Environment Agency Mentions")) +
     coord_flip() +
-    coord_polar() +
     theme(
       plot.background = element_rect(fill = "black", colour = NA),
       panel.background = element_rect(fill = "black", colour = NA),

@@ -1,9 +1,12 @@
 # for first use run: spacy_install()
 # & spacy_initialize()
 #sample of data
-sample_data = sample_n(tweets_2021, 1)
+sample_data = sample_n(tweets, 1)
 pos_emotions = c("positive", "trust", "joy", "surprise")
 neg_emotions = c("anger", "fear", "sadness", "disgust", "negative", "anticipation")
+
+tweets = read.csv("data/ea_mentions_2017_2021.csv")
+tweets$text = tweets$text %>% clean_tweets_sentiment()
 
 #anger, fear, anticipation, trust, surprise, sadness, joy, and disgust
 #Create entity string dataframe
@@ -11,16 +14,12 @@ entity_sentiment_string <- function(data) {
   out <- tryCatch({
     #Get sentiment polarity for tweet
     sentiment_polarity = analyzeSentiment(sample_data$text)
-    #Clean tweet
-    tweet = sample_data$text %>% clean_tweets_sentiment()
     
     #Parse tweet
     parsedtxt = spacy_parse(
-      tweet,
+      sample_data$text,
       pos = TRUE,
-      tag = TRUE,
       lemma = TRUE,
-      entity = TRUE,
       dependency = TRUE,
       nounphrase = TRUE,
       multithread = TRUE
@@ -29,7 +28,20 @@ entity_sentiment_string <- function(data) {
       left_join(get_sentiments("nrc")) %>%
       filter(entity != "TIME_B", entity != "TIME_I")
     
-    tv = filter(parsedtxt, sentiment != is.na(sentiment)) %>% select(word)
+    sample_data = sample_data %>%
+      rename(word = text) %>%
+      left_join(get_sentiments("nrc"))
+    
+    adj = as.vector(
+      filter(parsedtxt$pos)
+    )
+    sentiment(sample_data$word)
+    sentiment(sample_data$word, polarity_dt = lexicon::hash_sentiment_jockers_rinker,
+              emojis_dt = lexicon::hash_sentiment_emojis, hyphen = "",
+              amplifier.weight = 0.8, n.before = 5, n.after = 2,
+              question.weight = 1, adversative.weight = 0.25,
+              neutral.nonverb.like = FALSE, missing_value = 0)
+    senti_triggers = filter(parsedtxt, sentiment != is.na(sentiment)) %>% select(word)
     unique(tv)
     # Condition to catch if tweet has no emo-lex association
     suppressWarnings(
@@ -47,7 +59,7 @@ entity_sentiment_string <- function(data) {
         emotion_phrase = paste(emotion, emotion_direction, sep = "")
         message("calculating sentiment at entity level")
         #Extract unique noun phrases and merge into DF
-        nounphrase_entity = spacy_extract_nounphrases(tweet, output = "data.frame")
+        nounphrase_entity = spacy_extract_nounphrases(sample_data$text, output = "data.frame")
         nounphrase_entity = names(table(nounphrase_entity$text))[as.vector(table(nounphrase_entity$text)) ==
                                                                    unique(table(nounphrase_entity$text))]
         nounphrase_entity_df = as.data.frame(nounphrase_entity)
@@ -62,8 +74,6 @@ entity_sentiment_string <- function(data) {
           unnest_tokens(word, text)
         #match sentiment words from the 'NRC' sentiment lexicon
         senti = inner_join(token, get_sentiments("nrc"))
-        
-        
       }
     )
     

@@ -39,17 +39,41 @@ Column {data-width=550}
     geom_bar(stat = "identity") +
     coord_flip()
 ```
-General Sentiment
+
+Frequency (2)
 =======================================================================
+
 Column {data-width=550}
 -----------------------------------------------------------------------
 
-### Adjective frequency (top 50)
+### Nounphrase frequency (top 50)
 ```{r}
+nounphrase = read.csv("../data/nounphrase_freq.csv")
+nounphrase = nounphrase[(1:50),]
+ggplot(nounphrase, aes(x=reorder(text, n), y = n)) +
+  geom_bar(stat = "identity") +
+  coord_flip()
+```
 
-tweets = as.data.frame(read.csv("../data/ea_mentions_2017_2021_cleaned.csv"))
+Column {data-width=550}
+-----------------------------------------------------------------------
 
-  token = data.frame(text = tweets$x, stringsAsFactors = FALSE) %>%
+### Entity type frequency (top 50)
+```{r}
+  entity_type = read.csv("../data/entity_type_freq.csv")
+  entity_type = entity_type[(1:50),]
+  
+  ggplot(entity_type, aes(x = reorder(ent_type, n), y = n)) +
+    geom_bar(stat = "identity") +
+    coord_flip()
+```
+
+General sentiment
+=======================================================================
+```{r}
+clean_df = read.csv("../data/ea_mentions_2017_2021_cleaned.csv")
+  #token df
+  token = data.frame(text = clean_df$x, stringsAsFactors = FALSE) %>%
     unnest_tokens(word, text)
   
   #Matching sentiment words from the 'NRC' sentiment lexicon
@@ -62,9 +86,8 @@ tweets = as.data.frame(read.csv("../data/ea_mentions_2017_2021_cleaned.csv"))
   #Plotting the sentiment summary
   ggplot(senti, aes(sentiment, percent)) +
     geom_bar(aes(fill = sentiment), position = 'stack', stat = 'identity') +
-    ggtitle("(NRC EMO-LEX) \nEmotional Sentiment for Environment Agency \nmentions on Twitter") +
+    ggtitle("(NRC EMO-LEX) \nEmotional Sentiment for EA \nmentions on Twitter") +
     coord_flip() +
-    coord_polar() +
     theme(
       plot.background = element_rect(fill = "black", colour = NA),
       panel.background = element_rect(fill = "black", colour = NA),
@@ -76,4 +99,5 @@ tweets = as.data.frame(read.csv("../data/ea_mentions_2017_2021_cleaned.csv"))
         colour = "white"
       ),
     )
+
 ```
