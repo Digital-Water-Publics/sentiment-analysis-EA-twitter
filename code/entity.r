@@ -133,15 +133,40 @@ table = as.data.frame(table(nrc$sentiment))
 twee = read.csv("data/parsed_tweets_POS_stop_words.csv")
 #Join data with NRC lex
 twee_sub = twee %>%
-  rename(word = token ) %>% 
+  rename(word = token) %>%
   inner_join(get_sentiments("nrc"), by = "word")
 
 #Group emo-lex trigger words
-emo_lex_trigger_freq = twee_sub %>% group_by(doc_id,word) %>% summarise(count=n())
-#Group emo-lex freq 
-emo_lex_senti_freq = twee_sub %>% group_by(doc_id,sentiment) %>% summarise(count=n())
+emo_lex_trigger_freq = twee_sub %>% 
+  group_by(doc_id, word) %>% 
+  summarise(count = n()) %>%
+  select(doc_id,word)
+
+
+o = split(emo_lex_trigger_freq$word,emo_lex_trigger_freq$doc_id)
+  o = strsplit(as.character(o), "_")
+as.data.frame(o)
+
+op = cbind(o) 
+
+df <- tibble::rownames_to_column(kl, "doc_id")
+
+tweetsTest = right_join(tweetsTest,df) %>% rename(emo_lex_trigger = o)
+tweetsTest$sent_score = tweetsTest$senti$sentiment
+tweetsTest = tweetsTest %>% select(-c(senti))
+
+
+write.csv(tweetsTest,"data/main_data_table.csv")
+
+#Group emo-lex sentiment freq
+emo_lex_senti_freq = twee_sub %>% 
+  group_by(doc_id, sentiment) %>% 
+  summarise(count = n()) %>%
+  pivot_wider(names_from = sentiment, values_from = count)
+  
 
 #Paste doc_id to column
 tweets$doc_id = seq.int(nrow(tweets))
-tweets$doc_id = paste("text",tweets$doc_id,sep = "")
+tweets$doc_id = paste("text", tweets$doc_id, sep = "")
 
+tweetsTest = right_join(tweets,emo_lex_senti_freq)
