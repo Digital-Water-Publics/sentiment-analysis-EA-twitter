@@ -155,8 +155,8 @@ tweetsTest = right_join(tweetsTest,df) %>% rename(emo_lex_trigger = o)
 tweetsTest$sent_score = tweetsTest$senti$sentiment
 tweetsTest = tweetsTest %>% select(-c(senti))
 
-
-write.csv(tweetsTest,"data/main_data_table.csv")
+saveRDS(tweetsTest, file = "data/primary_dataframe.rds")
+readRDS("data/primary_dataframe.rds")
 
 #Group emo-lex sentiment freq
 emo_lex_senti_freq = twee_sub %>% 
