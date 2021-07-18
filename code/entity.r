@@ -118,13 +118,30 @@ entity_sentiment_string <- function(data) {
 # 3. Add new column string e.g. "angry @ supply network"
 # 4. Add polarity sentiment score
 # 5. Export
-tweets = tweets$word %>% clean_tweets_sentiment()
 
+
+#Clean tweets
+tweets = tweets$word %>% clean_tweets_sentiment()
+#name tweets and merge with NRC
 tweets = tweets %>% rename(word = text)
 nrc = tweets %>%
   inner_join(get_sentiments("nrc"), by = "word")
-
+#Create table
 table = as.data.frame(table(nrc$sentiment))
 
+#Read parsed tweets with stop words
+twee = read.csv("data/parsed_tweets_POS_stop_words.csv")
+#Join data with NRC lex
+twee_sub = twee %>%
+  rename(word = token ) %>% 
+  inner_join(get_sentiments("nrc"), by = "word")
+
+#Group emo-lex trigger words
+emo_lex_trigger_freq = twee_sub %>% group_by(doc_id,word) %>% summarise(count=n())
+#Group emo-lex freq 
+emo_lex_senti_freq = twee_sub %>% group_by(doc_id,sentiment) %>% summarise(count=n())
+
+#Paste doc_id to column
 tweets$doc_id = seq.int(nrow(tweets))
 tweets$doc_id = paste("text",tweets$doc_id,sep = "")
+
