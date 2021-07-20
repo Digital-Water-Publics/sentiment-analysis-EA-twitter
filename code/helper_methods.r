@@ -24,13 +24,15 @@ clean_tweets_sentiment = function(x) {
 if (file.exists("data/ea_mentions_2017_2021_cleaned.csv")) {
   clean_tweets = read.csv("data/ea_mentions_2017_2021_cleaned.csv")
 } else {
-  tweets = read.csv("data/ea_mentions_2017_2021.csv")
-  clean_tweets = tweets %>% tweets$text %>% clean_tweets_sentiment()
+  tweets = read.csv("data/ea_mentions_all.csv")
+  clean_tweets = tweets$text %>% clean_tweets_sentiment()
   clean_tweets =  as.vector(clean_tweets)
   clean_tweets = removeWords(clean_tweets, words = stopwords("english"))
   
   write.csv(clean_tweets, "data/ea_mentions_2017_2021_cleaned.csv")
 }
+
+
 senti_polarity_tweets = function(tweets){
   #Calculate tweet polarity sentiment
   tweets$senti = sentiment(

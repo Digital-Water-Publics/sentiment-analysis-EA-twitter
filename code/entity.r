@@ -10,7 +10,7 @@ neg_emotions = c("anger",
                  "negative",
                  "anticipation")
 
-tweets = read.csv("data/ea_mentions_2017_2021.csv")
+tweets = read.csv("data/ea_mentions_all.csv")
 tweets$text = tweets$text %>% clean_tweets_sentiment()
 
 #anger, fear, anticipation, trust, surprise, sadness, joy, and disgust
