@@ -123,21 +123,3 @@ senti_polarity_tweets = function(tweets){
 
 }
 
-
-senti_polarity_tweets = function(tweets){
-  #Calculate tweet polarity sentiment
-  tweets$senti = sentiment(
-    tweets$text,
-    senti_dt = lexicon::hash_sentiment_nrc,
-    emojis_dt = lexicon::hash_sentiment_emojis,
-    hyphen = "",
-    amplifier.weight = 0.8,
-    n.before = Inf,
-    n.after = Inf,
-    question.weight = 1,
-    adversative.weight = 0.25,
-    neutral.nonverb.like = FALSE,
-    missing_value = 0
-  )
-
-}

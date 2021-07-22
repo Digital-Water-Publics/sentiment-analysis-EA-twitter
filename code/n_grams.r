@@ -16,19 +16,26 @@ if (file.exists("data/bigrams_filtered.RDS")) {
 }
 
 # Calculate ngrams for nounphrases ----------------------------------------
-nounphrase = as.data.frame(c("water industry", "water companies", "raw sewage","water quality" ))
+nounphrase = as.data.frame(c(
+  "water industry",
+  "water companies",
+  "raw sewage",
+  "water quality"
+))
 colnames(nounphrase) = "nounphrase"
-for(i in 1:nrow(nounphrase)){
+for (i in 1:nrow(nounphrase)) {
   nounphrase$phrasetoken[i] = str_replace_all(nounphrase$nounphrase[i], fixed(" "), "")
 }
 
-if(file.exists("data/bigrams_filtered_nounphrases.RDS")){
+if (file.exists("data/bigrams_filtered_nounphrases.RDS")) {
   bigrams_filtered_3 = readRDS("data/bigrams_filtered_nounphrases.RDS")
 } else {
   #create temp df and replace all nounphrases with thier squished tokens
   n_gram_df = tweets_primary_df
-  for(i in 1:nrow(nounphrase)){
-    n_gram_df$word = str_replace_all(n_gram_df$word, nounphrase$nounphrase[i], nounphrase$phrasetoken[i])
+  for (i in 1:nrow(nounphrase)) {
+    n_gram_df$word = str_replace_all(n_gram_df$word,
+                                     nounphrase$nounphrase[i],
+                                     nounphrase$phrasetoken[i])
   }
   ntweet_bigrams_nounphrase = n_gram_df %>%
     unnest_tokens(biagram, word, token = "ngrams", n = 2)
@@ -40,7 +47,8 @@ if(file.exists("data/bigrams_filtered_nounphrases.RDS")){
     filter(!word1 %in% stop_words$word) %>%
     filter(!word2 %in% stop_words$word)
   
-  saveRDS(bigrams_separated_nounphrase, "data/bigrams_filtered_nounphrases.RDS")
+  saveRDS(bigrams_separated_nounphrase,
+          "data/bigrams_filtered_nounphrases.RDS")
 }
 
 # Create function to show ngram frequency ---------------------------------
@@ -55,7 +63,7 @@ bigram_plots = function(data, word) {
     count(word2, sort = TRUE)
   
   #Plot
-  word_graph_word_1 = word_graph_word_1[(1:25),]
+  word_graph_word_1 = word_graph_word_1[(1:25), ]
   
   ggplot(word_graph_word_1, aes(x = reorder(word2, n), y = n)) +
     geom_bar(stat = "identity") +
@@ -70,7 +78,7 @@ bigram_plots = function(data, word) {
     count(word1, sort = TRUE)
   
   #Plot
-  word_graph_word_2 = word_graph_word_2[(1:25),]
+  word_graph_word_2 = word_graph_word_2[(1:25), ]
   ggplot(word_graph_word_2, aes(x = reorder(word1, n), y = n)) +
     geom_bar(stat = "identity") +
     xlab(paste(word, second_word, sep = " ")) +
@@ -78,18 +86,5 @@ bigram_plots = function(data, word) {
   
   ggsave(paste(plots_folder, word, "second_word.png", sep = ""))
 }
-
-# Calculate colocation for sinlge phrases ------------------------------------
-for(i in 1:nrow(nounphrase)){
-  bigram_plots(data = bigrams_separated_nounphrase, word = nounphrase$phrasetoken[i])
-}
-# Calculate colocation for nounphrases ------------------------------------
-words = as.data.frame(c("river", "flood", "water", "waste", "pollution", "sewage", "bad"))
-colnames(words) = "word"
-for(i in 1:nrow(words)){
-  bigram_plots(data = bigrams_filtered, word = words$word[i])
-}
-
-
 
 

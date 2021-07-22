@@ -10,6 +10,29 @@ if (mine_build) {
 # Helper methods --------------------------------------------------------
 source("code/helper_methods.r")
 
+
+# N-grams -----------------------------------------------------------------
+source("code/n_grams.r")
+# Calculate colocation for sinlge phrases 
+suppressMessages(
+  for (i in 1:nrow(nounphrase)) {
+    bigram_plots(data = bigrams_filtered, word = nounphrase$phrasetoken[i])
+  }
+)
+# Calculate colocation for nounphrases 
+words = as.data.frame(c("river", "flood", "water", "waste", "pollution", "sewage", "bad"))
+colnames(words) = "word"
+suppressMessages(
+  for (i in 1:nrow(words)) {
+    bigram_plots(data = bigrams_filtered_3, word = words$word[i])
+  }
+)
+
+rm(bigrams_filtered,bigrams_filtered_3,words,nounphrase)
+# Topic modelling -----------------------------------------------------------------
+
+
+
 # Sentiment functions -----------------------------------------------------
 source("code/sentiment_functions.r")
 
