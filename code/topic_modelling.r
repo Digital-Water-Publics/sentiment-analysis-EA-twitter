@@ -1,15 +1,17 @@
-library(topicmodels)
-
-clean_tweets = sample_n(tweets_primary_df, 2000)
+library(bigmemory)
+#Create clean random sample of tweets
+clean_tweets = sample_n(tweets_primary_df, 15000)
 clean_tweets = clean_tweets$word %>% clean_tweets_sentiment()
 clean_tweets =  as.vector(clean_tweets)
 clean_tweets = removeWords(clean_tweets, words = stopwords("english"))
-
-corpus <- Corpus(VectorSource(clean_tweets))  # Create corpus object
-
+# Create data-frame into corpus object
+corpus <- Corpus(VectorSource(clean_tweets))  
 merge_dtm <- DocumentTermMatrix(corpus)
 
-#Find frequency of words
+doc.lengths <- rowSums(big.matrix(DocumentTermMatrix(corpus)))
+dtm <- DocumentTermMatrix(corpus[doc.lengths > 0])
+
+#Method 1
 doc.length = apply(merge_dtm, 1, sum)
 merge_dtm = merge_dtm[doc.length > 0, ]
 freq = colSums(as.matrix(merge_dtm))

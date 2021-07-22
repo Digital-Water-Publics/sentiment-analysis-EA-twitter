@@ -8,8 +8,7 @@ if (mine_build) {
   source("code/twitter_mine.R")
 }
 # Helper methods --------------------------------------------------------
-source("code/helper_methods.r")
-
+source("code/setup.r")
 
 # N-grams -----------------------------------------------------------------
 source("code/n_grams.r")
@@ -30,8 +29,7 @@ suppressMessages(
 
 rm(bigrams_filtered,bigrams_filtered_3,words,nounphrase)
 # Topic modelling -----------------------------------------------------------------
-
-
+source("code/topic_modelling.r")
 
 # Sentiment functions -----------------------------------------------------
 source("code/sentiment_functions.r")
