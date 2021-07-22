@@ -47,3 +47,16 @@ boxplot(
   xlab = "Year",
   ylab = "Polarity Score"
 )
+tweets_primary_df$time = substr(tweets_primary_df$created_at, start = 12, stop = 19)
+tweets_primary_df$date = substr(tweets_primary_df$created_at, start = 1, stop = 10)
+tweets_primary_df$date = as.Date(tweets_primary_df$date)
+
+ggplot(tweets_primary_df, aes(x=date, y=sent_score)) +
+  geom_line() + 
+  xlab("")
+
+ggplot(tweets_primary_df, aes(x = date, y = sent_score)) + 
+  geom_area(aes(color = year, fill = year), 
+            alpha = 0.5, position = position_dodge(0.8)) +
+  scale_color_manual(values = c("#2DE1FC", "#2AFC98", "#09E85E", "#16C172", "#214F4B","#355F5B")) +
+  scale_fill_manual(values = c("#2DE1FC", "#2AFC98", "#09E85E", "#16C172", "#214F4B","#355F5B")) 

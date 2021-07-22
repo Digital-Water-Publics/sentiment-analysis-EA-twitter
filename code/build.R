@@ -3,11 +3,10 @@ source("code/install_libs.R")
 
 #logic gate to trigger twitter mine
 mine_build = FALSE
-if(mine_build){
-# Mine the Twittersphere  -------------------------------------------------------
+if (mine_build) {
+  # Mine the Twittersphere  -------------------------------------------------------
   source("code/twitter_mine.R")
 }
-
 # Helper methods --------------------------------------------------------
 source("code/helper_methods.r")
 
@@ -16,4 +15,3 @@ source("code/sentiment_functions.r")
 
 # Sentiment dataframe
 source("code/sentiment.R")
-

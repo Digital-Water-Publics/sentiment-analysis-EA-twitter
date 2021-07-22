@@ -10,9 +10,7 @@ pkgs = c(
   "RTextTools",
   "e1071",
   "spacyr",
-  "academictwitteR",
-  "knitr",
-  "kableExtra"
+  "academictwitteR"
 )
 
 # Install pkgs not yet installed
@@ -23,4 +21,3 @@ if (any(installed_packages == FALSE)) {
 
 # Load pkgs
 invisible(lapply(pkgs, library, character.only = TRUE))
-
