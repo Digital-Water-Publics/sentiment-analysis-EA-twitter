@@ -10,7 +10,11 @@ pkgs = c(
   "RTextTools",
   "e1071",
   "spacyr",
-  "academictwitteR"
+  "academictwitteR",
+  "topicmodels",
+  "Matrix",
+  "textmineR",
+  "ldatuning"
 )
 
 # Install pkgs not yet installed
