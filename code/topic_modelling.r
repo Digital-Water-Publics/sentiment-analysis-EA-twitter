@@ -1,38 +1,33 @@
-library(bigmemory)
-#Create clean random sample of tweets
-clean_tweets = sample_n(tweets_primary_df, 15000)
-clean_tweets = clean_tweets$word %>% clean_tweets_sentiment()
-clean_tweets =  as.vector(clean_tweets)
-clean_tweets = removeWords(clean_tweets, words = stopwords("english"))
-# Create data-frame into corpus object
-corpus <- Corpus(VectorSource(clean_tweets))  
-merge_dtm <- DocumentTermMatrix(corpus)
+library(tm)
+library(topicmodels)
+library(Matrix)
+library(textmineR)
+install.packages("ldatuning")
+library(ldatuning)
 
-doc.lengths <- rowSums(big.matrix(DocumentTermMatrix(corpus)))
-dtm <- DocumentTermMatrix(corpus[doc.lengths > 0])
+#Convert tweets into corpus
+text_corpus <- SimpleCorpus(VectorSource(tweets_primary_df$word))
+#Convert corpus into document term matrix
+text_dtm <- DocumentTermMatrix(text_corpus,
+                               control = list(tolower=TRUE,
+                                              removePunctuation = TRUE, 
+                                              removeNumbers= TRUE,
+                                              stopwords = TRUE,
+                                              sparse=TRUE))
 
-#Method 1
-doc.length = apply(merge_dtm, 1, sum)
-merge_dtm = merge_dtm[doc.length > 0, ]
-freq = colSums(as.matrix(merge_dtm))
-length(freq)
-ord = order(freq, decreasing = TRUE)
-freq[head(ord, n = 20)]
+#Create sparse matrix for memory issues
+text_dtm2 <- Matrix::sparseMatrix(i=text_dtm$i, 
+                                  j=text_dtm$j,
+                                  x=text_dtm$v, 
+                                  dims=c(text_dtm$nrow, text_dtm$ncol), 
+                                  dimnames = text_dtm$dimnames)
+#Calculate row sums
+doc_lengths <- Matrix::rowSums(text_dtm2)
+#Remove doc lenths < 0
+text_dtm3 <- text_dtm2[doc_lengths > 0, ]
 
-#LDA model with 10 topics selected
-lda_10 = LDA(
-  merge_dtm,
-  k = 4,
-  method = 'Gibbs',
-  control = list(
-    nstart = 5,
-    seed = list(1505, 99, 36, 56, 88),
-    best = TRUE,
-    thin = 500,
-    burnin = 4000,
-    iter = 2000
-  )
-)
-
-top10terms_10 = as.matrix(terms(lda_10, 10))
-topicprob_10 = as.matrix(lda_10@gamma)
+set.seed(9393)
+#LDA model
+text_lda <- LDA(text_dtm3,  k = 5, method = "Gibbs", control = NULL)
+top10terms_10 = as.matrix(terms(text_lda, 10))
+top10terms_10
