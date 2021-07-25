@@ -38,9 +38,24 @@ tweets_primary_df$sadness = replace_na(tweets_primary_df$sadness, 0)
 tweets_primary_df$surprise = replace_na(tweets_primary_df$surprise, 0)
 tweets_primary_df$trust = replace_na(tweets_primary_df$trust, 0)
 
-ooo = tweets_primary_df %>% 
-  group_by(date) %>%
-  summarise(across(anticipation:joy, ~ sum(.x, na.rm = FALSE)))
+
+ooo = ooo %>% select(-c(positive,negative))
+ooo %>% tidyr::gather("id", "value", 2:9) %>% 
+  ggplot(., aes(date, value))+
+  geom_line()+
+  facet_wrap(~id)
+
+install.packages("Hmisc")
+library(Hmisc)
+oot = ooo %>% select(-c(date))
+res2 <- rcorr(as.matrix(oot))
+library(corrplot)
+corrplot(res2, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+
+M = cor(oot)
+corrplot(M, method = 'square', diag = FALSE, order = 'hclust', 
+         addrect = 2, rect.col = 'black', rect.lwd = 3, tl.pos = 'd', bg = "gold2") 
 
 # N-grams -----------------------------------------------------------------
 source("code/n_grams.r")
