@@ -1,4 +1,4 @@
-topic_model_tweet_corpus = function(tweet_vector) {
+topic_model_tweet_corpus = function(tweet_vector,n) {
   #Convert tweets into corpus
   text_corpus <- SimpleCorpus(VectorSource(tweet_vector))
   #Convert corpus into document term matrix
@@ -29,10 +29,11 @@ topic_model_tweet_corpus = function(tweet_vector) {
   set.seed(9393)
   #LDA model
   text_lda <- LDA(text_dtm3,
-                  k = 7,
+                  k = n,
                   method = "Gibbs",
                   control = NULL)
   top10terms_10 = as.matrix(terms(text_lda, 10))
   top10terms_10
   
 }
+

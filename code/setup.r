@@ -23,6 +23,12 @@ clean_tweets_sentiment = function(x) {
 
 if(file.exists("data/primary_dataframe.rds")) {
   tweets_primary_df = readRDS("data/primary_dataframe.rds")
+  #Turn sentiment NA's to 0
+  tweets_primary_df = tweets_primary_df %>% mutate_at(vars(anger, anticipation, disgust, fear, joy, sadness, surprise, trust),~ replace_na(.,0))
+  # Create seperate date column 
+  tweets_primary_df$time = substr(tweets_primary_df$created_at, start = 12, stop = 19)
+  tweets_primary_df$date = substr(tweets_primary_df$created_at, start = 1, stop = 10)
+  tweets_primary_df$date = as.Date(tweets_primary_df$date)
 } else {
   #Clean tweets
   #tweets = tweets_no_ea$word %>% clean_tweets_sentiment()
@@ -118,6 +124,38 @@ senti_polarity_tweets = function(tweets){
     neutral.nonverb.like = FALSE,
     missing_value = 0
   )
-
 }
 
+sentiment_history = tweets_primary_df %>%
+  group_by(date) %>%
+  summarise(across(anticipation:joy, ~ sum(.x, na.rm = FALSE))) %>%
+  select(-c(positive, negative)) 
+run = FALSE
+if(run){
+  cols_to_plot = c("anger","anticipation","fear","sadness","disgust","surprise","trust","joy")
+  for (i in seq_along(cols_to_plot)) {
+    p = ggplot(ooo, aes(x = date, y = joy)) +
+      geom_line() +
+      xlab("")
+    
+    p + scale_x_date(date_breaks = "1 month", date_labels = "%b")
+    plots_folder = "plots/"
+    ggsave(paste(plots_folder, "joy", "_historical.png", sep = ""),width = 20)
+  }
+  
+  sentiment_history_nodate = sentiment_history %>% select(-c(date))
+  res2 <- rcorr(as.matrix(sentiment_history_nodate))
+  corrplot(res2, type = "upper", order = "hclust", 
+           tl.col = "black", tl.srt = 45)
+  
+  M = cor(sentiment_history_nodate)
+  corrplot(M, method = 'square', diag = FALSE, order = 'hclust', 
+           addrect = 2, rect.col = 'black', rect.lwd = 3, tl.pos = 'd', bg = "gold2") 
+  
+  # ooo %>% tidyr::gather("id", "value", 2:9) %>%
+  #   ggplot(., aes(date, value)) +
+  #   geom_line() +
+  #   facet_wrap( ~ id)
+} else {
+  print("not now")
+}

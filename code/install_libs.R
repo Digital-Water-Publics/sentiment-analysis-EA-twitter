@@ -14,7 +14,9 @@ pkgs = c(
   "topicmodels",
   "Matrix",
   "textmineR",
-  "ldatuning"
+  "ldatuning",
+  "Hmsic",
+  "corrplot"
 )
 
 # Install pkgs not yet installed
