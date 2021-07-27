@@ -144,10 +144,6 @@ if(run){
   }
   
   sentiment_history_nodate = sentiment_history %>% select(-c(date))
-  res2 <- rcorr(as.matrix(sentiment_history_nodate))
-  corrplot(res2, type = "upper", order = "hclust", 
-           tl.col = "black", tl.srt = 45)
-  
   M = cor(sentiment_history_nodate)
   corrplot(M, method = 'square', diag = FALSE, order = 'hclust', 
            addrect = 2, rect.col = 'black', rect.lwd = 3, tl.pos = 'd', bg = "gold2") 
