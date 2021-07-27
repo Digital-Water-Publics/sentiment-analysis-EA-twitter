@@ -11,41 +11,10 @@ if (mine_build) {
 source("code/setup.r")
 
 
-historical_sentiment = tweets_primary_df %>% group_by(date) %>% count(anticipation, fear, sadness, anger, disgust, surprise, trust, joy)
-
-oo = tweets_primary_df %>% aggregate(
-  cbind(
-    tweets_primary_df$date,
-    tweets_primary_df$anger,
-    tweets_primary_df$anticipation,
-    tweets_primary_df$disgust,
-    tweets_primary_df$fear,
-    tweets_primary_df$joy,
-    tweets_primary_df$sadness,
-    tweets_primary_df$surprise,
-    tweets_primary_df$trust
-  )
-)
-aa = aggregate(x = tweets_primary_df, by = list(tweets_primary_df$trust, tweets_primary_df$anger), FUN = "sum")
 
 
-tweets_primary_df$anger = replace_na(tweets_primary_df$anger, 0)
-tweets_primary_df$anticipation = replace_na(tweets_primary_df$anticipation, 0)
-tweets_primary_df$disgust = replace_na(tweets_primary_df$disgust, 0)
-tweets_primary_df$fear = replace_na(tweets_primary_df$fear, 0)
-tweets_primary_df$joy = replace_na(tweets_primary_df$joy, 0)
-tweets_primary_df$sadness = replace_na(tweets_primary_df$sadness, 0)
-tweets_primary_df$surprise = replace_na(tweets_primary_df$surprise, 0)
-tweets_primary_df$trust = replace_na(tweets_primary_df$trust, 0)
 
 
-ooo = ooo %>% select(-c(positive,negative))
-ooo %>% tidyr::gather("id", "value", 2:9) %>% 
-  ggplot(., aes(date, value))+
-  geom_line()+
-  facet_wrap(~id)
-
-install.packages("Hmisc")
 library(Hmisc)
 oot = ooo %>% select(-c(date))
 res2 <- rcorr(as.matrix(oot))
