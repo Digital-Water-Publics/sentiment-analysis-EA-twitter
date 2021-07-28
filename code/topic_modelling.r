@@ -89,14 +89,20 @@ if(file.exists("data/tweets_primary_df_topics.rds")){
   topics5 = topics %>% select(26:30)
   
   plot_topic_prob = function(topic) {
-    topic %>%
-      pivot_longer(cols = 1:max.col(topic)) %>% 
+    
+    topics8 %>%
+      pivot_longer(cols = 1:8) %>% 
       ggplot(aes(value)) + 
       geom_histogram() + 
       facet_wrap(~name, scales = "free")
     
     ggsave(paste("data/",topic, "_hist_plot.png", sep = ""))
   }
+  
+  plot_topic_prob(topic = topics5)
+  plot_topic_prob(topic = topics6)
+  plot_topic_prob(topic = topics7)
+  plot_topic_prob(topic = topics8)
   
 }
 
