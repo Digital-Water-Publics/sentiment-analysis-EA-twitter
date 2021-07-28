@@ -29,6 +29,8 @@ if(file.exists("data/primary_dataframe.rds")) {
   tweets_primary_df$time = substr(tweets_primary_df$created_at, start = 12, stop = 19)
   tweets_primary_df$date = substr(tweets_primary_df$created_at, start = 1, stop = 10)
   tweets_primary_df$date = as.Date(tweets_primary_df$date)
+  
+  tweets_primary_df$document = seq.int(nrow(tweets_primary_df))
 } else {
   #Clean tweets
   #tweets = tweets_no_ea$word %>% clean_tweets_sentiment()
