@@ -1,6 +1,19 @@
-if(file.exists("data/tweets_primary_df_topics.rds")){
+if(file.exists("data/tweets_primary_df_topics_best.rds")){
   primary_df_topics = readRDS("data/tweets_primary_df_topics.rds")
 } else {
+  #set burn in
+  burnin = 1000
+  #set iterations
+  iter=2000
+  #thin the spaces between samples
+  thin = 500
+  #set random starts at 5
+  nstart = 5
+  #use random integers as seed 
+  seed = list(123,456,789,987,654)
+  # return the highest probability as the result
+  best = TRUE
+  
   topic_model_tweet_corpus = function(tweet_vector, n) {
     # Converting tweets into corpus ----------------------------------------------
     print("Converting tweets into corpus")
@@ -36,12 +49,12 @@ if(file.exists("data/tweets_primary_df_topics.rds")){
       text_dtm3,
       k = n,
       method = "Gibbs",
-      control = list(seed = 2021)
+      control = list(nstart=nstart, seed = seed, best=best, burnin = burnin, iter = iter, thin=thin)
     )
     print("Extracting model features")
     top10terms_10 = as.matrix(terms(text_lda, 10))
     write.csv(top10terms_10,
-              paste("top_10_topic_terms", n, ".csv", sep = ""))
+              paste("top_10_topic_terms_best_", n, ".csv", sep = ""))
     #Create topic per tweet
     topic_per_tweet = tidy(text_lda, matrix = "gamma") %>%
       pivot_wider(names_from = topic, values_from = "gamma")
@@ -81,28 +94,25 @@ if(file.exists("data/tweets_primary_df_topics.rds")){
   topic_model_tweet_corpus(tweet_vector = tweets_primary_df$word, n = 7)
   topic_model_tweet_corpus(tweet_vector = tweets_primary_df$word, n = 8)
   
-  saveRDS(tweets_primary_df,"data/tweets_primary_df_topics.rds")
-  
-  topics8 = topics %>% select(2:9)
-  topics7 = topics %>% select(11:17)
-  topics6 = topics %>% select(19:24)
-  topics5 = topics %>% select(26:30)
-  
-  plot_topic_prob = function(topic) {
-    
-    topics8 %>%
-      pivot_longer(cols = 1:8) %>% 
-      ggplot(aes(value)) + 
-      geom_histogram() + 
-      facet_wrap(~name, scales = "free")
-    
-    ggsave(paste("data/",topic, "_hist_plot.png", sep = ""))
-  }
-  
-  plot_topic_prob(topic = topics5)
-  plot_topic_prob(topic = topics6)
-  plot_topic_prob(topic = topics7)
-  plot_topic_prob(topic = topics8)
+  saveRDS(tweets_primary_df,"data/tweets_primary_df_topics_best.rds")
   
 }
 
+topics6 = tweets_primary_df %>% select(2:7)
+topics5 = tweets_primary_df %>% select(9:13)
+
+plot_topic_prob = function(topic) {
+  
+  topics5 %>%
+    pivot_longer(cols = 1:5) %>% 
+    ggplot(aes(value)) + 
+    geom_histogram() + 
+    facet_wrap(~name, scales = "free")
+  
+  ggsave(paste("data/",topic, "_hist_plot.png", sep = ""))
+}
+
+plot_topic_prob(topic = topics5)
+plot_topic_prob(topic = topics6)
+plot_topic_prob(topic = topics7)
+plot_topic_prob(topic = topics8)

@@ -38,7 +38,7 @@ entity_sentiment_string <- function(data) {
     
     adj = as.vector(filter(parsedtxt$pos))
     t =  sentiment(
-      sample_data$word,
+      sample$word,
       senti_dt = lexicon::hash_sentiment_nrc,
       emojis_dt = lexicon::hash_sentiment_emojis,
       hyphen = "",
