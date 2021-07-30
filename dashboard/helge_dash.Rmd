@@ -3,11 +3,72 @@ title: "Sentiment dashboard for computationally challenged Helge"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
-    vertical_layout: fill
+    vertical_layout: scroll
 ---
 
 ```{r setup, include=FALSE}
 source("../code/install_libs.R")
+tweets_primary_df = readRDS("../data/tweets_primary_df_topics_best.rds")
+topics = read.csv("../top_10_topic_terms_best_5.csv")
+
+plot_topic_history_freq = function(topic_n)
+{
+  tweets_primary_df %>%
+    filter(`key_topic topic(k=5)` == topic_n) %>%
+    group_by(date) %>%
+    tally(sort = TRUE) %>%
+    ggplot(aes(x=date, y=n)) +
+    geom_line()
+}
+
+
+plot_general_senti_topic = function(topic_n)
+{
+  topic_sub = tweets_primary_df %>%
+    filter(`key_topic topic(k=5)` == topic_n) %>%
+    select(-c("positive","negative"))
+  general_nrc_sentiment(corpus = topic_sub$word)  
+}
+general_nrc_sentiment = function(corpus) {
+
+  token = data.frame(text = corpus, stringsAsFactors = FALSE) %>%
+    unnest_tokens(word, text)
+  
+  #Matching sentiment words from the 'NRC' sentiment lexicon
+  senti = inner_join(token, get_sentiments("nrc")) %>%
+    count(sentiment) %>%
+    filter(sentiment != "positive") %>%
+    filter(sentiment != "negative") %>%
+    arrange(sentiment) 
+  
+  senti$percent = (senti$n / sum(senti$n)) * 100
+  
+  #Plotting the sentiment summary
+  ggplot(senti, aes(sentiment, percent)) +
+    geom_bar(aes(fill = sentiment), position = 'stack', stat = 'identity') +
+    ggtitle("(NRC EMO-LEX) \nEmotional Sentiment for Environment Agency \nmentions on Twitter") +
+    coord_flip() +
+    theme(
+      plot.background = element_rect(fill = "black", colour = NA),
+      panel.background = element_rect(fill = "black", colour = NA),
+      legend.position = "none",
+      axis.text = element_text(color = "white"),
+      text = element_text(
+        size = 16,
+        family = "times",
+        colour = "white"
+      ),
+    )
+}
+topic_frequent_emo_lex_trigger = function(topic_n)
+{
+  topic = tweets_primary_df %>%
+    filter(`key_topic topic(k=6)` == topic_n)
+  topic1_emo_lex = as.data.frame(unlist(topic$emo_lex_trigger)) %>% 
+    rename(word = 1) %>% 
+    count(word, sort = TRUE)
+  DT::datatable(topic1_emo_lex, options = list(pageLength = 25))
+}
 ```
 
 Frequency
@@ -85,21 +146,183 @@ Column {data-width=550}
 ```
 
 
+Topic 1
+=======================================================================
+
+Row
+-------------------------------------
+    
+### Topic historical frequency
+    
 ```{r}
-plot_cluster_senti_freq = function(topic_n)
-{
-  k6_topic_1_pollution = tweets_primary_df %>% 
-    filter(`key_topic topic(k=5)` == topic_n) %>%
-    summarise(across(anticipation:joy, ~ sum(.x, na.rm = TRUE))) %>%
-    select(-c(positive, negative)) %>%
-    gather()
-  ggplot(k6_topic_1_pollution, aes(x = reorder(key, value), y = value)) +
-    geom_bar(stat = "identity") +
-    coord_flip()
-}
-plot_cluster_senti_freq(topic_n = 1)
-plot_cluster_senti_freq(topic_n = 2)
-plot_cluster_senti_freq(topic_n = 3)
-plot_cluster_senti_freq(topic_n = 4)
-plot_cluster_senti_freq(topic_n = 5)
+plot_topic_history_freq(topic_n = 1)
+```
+ 
+### Topic key terms
+    
+```{r}
+df = as.data.frame(topics$Topic.1)
+DT::datatable(df, options = list(
+    pageLength = 25
+))
+``` 
+
+Row
+-------------------------------------
+    
+### Topic general sentiment
+    
+```{r}
+plot_general_senti_topic(topic_n = 1)
+```
+    
+### Topic emo_lex_frequency
+
+```{r}
+topic_frequent_emo_lex_trigger(topic_n = 1)
+```
+
+
+Topic 2
+=======================================================================
+
+Row
+-------------------------------------
+    
+### Topic historical frequency
+    
+```{r}
+plot_topic_history_freq(topic_n = 2)
+```
+ 
+### Topic key terms
+    
+```{r}
+df = as.data.frame(topics$Topic.2)
+DT::datatable(df, options = list(
+    pageLength = 25
+))
+``` 
+
+Row
+-------------------------------------
+    
+### Topic general sentiment
+    
+```{r}
+plot_general_senti_topic(topic_n = 2)
+```
+    
+### Topic emo_lex_frequency
+
+```{r}
+topic_frequent_emo_lex_trigger(topic_n = 2)
+```
+
+Topic 3
+=======================================================================
+
+Row
+-------------------------------------
+    
+### Topic historical frequency
+    
+```{r}
+plot_topic_history_freq(topic_n = 3)
+```
+ 
+### Topic key terms
+    
+```{r}
+df = as.data.frame(topics$Topic.3)
+DT::datatable(df, options = list(
+    pageLength = 25
+))
+``` 
+
+Row
+-------------------------------------
+    
+### Topic general sentiment
+    
+```{r}
+plot_general_senti_topic(topic_n = 3)
+```
+    
+### Topic emo_lex_frequency
+
+```{r}
+topic_frequent_emo_lex_trigger(topic_n = 3)
+```
+
+Topic 4
+=======================================================================
+
+Row
+-------------------------------------
+    
+### Topic historical frequency
+    
+```{r}
+plot_topic_history_freq(topic_n = 4)
+```
+ 
+### Topic key terms
+    
+```{r}
+df = as.data.frame(topics$Topic.4)
+DT::datatable(df, options = list(
+    pageLength = 25
+))
+``` 
+
+Row
+-------------------------------------
+    
+### Topic general sentiment
+    
+```{r}
+plot_general_senti_topic(topic_n = 4)
+```
+    
+### Topic emo_lex_frequency
+
+```{r}
+topic_frequent_emo_lex_trigger(topic_n = 4)
+```
+
+Topic 5
+=======================================================================
+
+Row
+-------------------------------------
+    
+### Topic historical frequency
+    
+```{r}
+plot_topic_history_freq(topic_n = 5)
+```
+ 
+### Topic key terms
+    
+```{r}
+df = as.data.frame(topics$Topic.5)
+DT::datatable(df, options = list(
+    pageLength = 25
+))
+``` 
+
+Row
+-------------------------------------
+    
+### Topic general sentiment
+    
+```{r}
+plot_general_senti_topic(topic_n = 5)
+```
+    
+### Topic emo_lex_frequency
+
+```{r}
+topic_frequent_emo_lex_trigger(topic_n = 5)
 ```

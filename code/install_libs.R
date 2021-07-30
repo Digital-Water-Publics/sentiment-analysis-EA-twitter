@@ -15,7 +15,10 @@ pkgs = c(
   "Matrix",
   "textmineR",
   "ldatuning",
-  "corrplot"
+  "corrplot",
+  "knitr",
+  "kableExtra",
+  "DT"
 )
 
 # Install pkgs not yet installed

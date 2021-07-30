@@ -60,9 +60,19 @@ plot_general_senti_topic = function(topic_n)
   general_nrc_sentiment(corpus = topic_sub$word)  
   ggsave(paste("data/", topic_n, "topic_general_senti.png", sep = "_"))
 }
+plot_general_senti_topic(topic_n = 5)
 
 
-
+topic_frequent_emo_lex_trigger = function(topic_n)
+{
+  topic = tweets_primary_df %>%
+    filter(`key_topic topic(k=6)` == topic_n)
+  topic1_emo_lex = as.data.frame(unlist(topic$emo_lex_trigger)) %>% 
+    rename(word = 1) %>% 
+    count(word, sort = TRUE)
+  head(topic1_emo_lex, 20)
+}
+topic_frequent_emo_lex_trigger(topic_n = 5)
 
 #Create sample of tweets
 k6_topic_1_sample = sample_n(k6_topic_1_pollution,500)
