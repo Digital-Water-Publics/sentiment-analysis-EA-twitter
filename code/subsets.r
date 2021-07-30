@@ -26,7 +26,8 @@ asdas = tweets_primary_df %>%
 subset_by_topic = function(topic_n)
 {
   topic_sub = tweets_primary_df %>%
-    filter(`key_topic topic(k=5)` == topic_n) %>%
+    filter(`key_topic topic(k=5)` == 1) %>%
+    select(-c("positive","negative"))
     select(`key_topic topic(k=5)`,word, date)
   
   sub_sample = sample_n(topic_sub,500)
@@ -51,7 +52,15 @@ plot_topic_history_freq = function(topic_n)
 }
 plot_topic_history_freq(topic_n = 5)
 
-  
+plot_general_senti_topic = function(topic_n)
+{
+  topic_sub = tweets_primary_df %>%
+    filter(`key_topic topic(k=5)` == topic_n) %>%
+    select(-c("positive","negative"))
+  general_nrc_sentiment(corpus = topic_sub$word)  
+  ggsave(paste("data/", topic_n, "topic_general_senti.png", sep = "_"))
+}
+
 
 
 

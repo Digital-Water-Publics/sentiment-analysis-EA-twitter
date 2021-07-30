@@ -3,13 +3,15 @@
 ### 1. General sentiment function and viz
 general_nrc_sentiment = function(corpus) {
   #token df
-  token = data.frame(text = corpus, stringsAsFactors = FALSE) %>%
+  token = data.frame(text = topic_sub$word, stringsAsFactors = FALSE) %>%
     unnest_tokens(word, text)
   
   #Matching sentiment words from the 'NRC' sentiment lexicon
   senti = inner_join(token, get_sentiments("nrc")) %>%
     count(sentiment) %>%
-    arrange(sentiment)
+    filter(sentiment != "positive") %>%
+    filter(sentiment != "negative") %>%
+    arrange(sentiment) 
   
   senti$percent = (senti$n / sum(senti$n)) * 100
   
