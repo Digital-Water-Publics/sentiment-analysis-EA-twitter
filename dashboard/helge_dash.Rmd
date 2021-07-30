@@ -83,3 +83,23 @@ Column {data-width=550}
     geom_bar(stat = "identity") +
     coord_flip()
 ```
+
+
+```{r}
+plot_cluster_senti_freq = function(topic_n)
+{
+  k6_topic_1_pollution = tweets_primary_df %>% 
+    filter(`key_topic topic(k=5)` == topic_n) %>%
+    summarise(across(anticipation:joy, ~ sum(.x, na.rm = TRUE))) %>%
+    select(-c(positive, negative)) %>%
+    gather()
+  ggplot(k6_topic_1_pollution, aes(x = reorder(key, value), y = value)) +
+    geom_bar(stat = "identity") +
+    coord_flip()
+}
+plot_cluster_senti_freq(topic_n = 1)
+plot_cluster_senti_freq(topic_n = 2)
+plot_cluster_senti_freq(topic_n = 3)
+plot_cluster_senti_freq(topic_n = 4)
+plot_cluster_senti_freq(topic_n = 5)
+```

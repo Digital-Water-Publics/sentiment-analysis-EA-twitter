@@ -15,7 +15,6 @@ pkgs = c(
   "Matrix",
   "textmineR",
   "ldatuning",
-  "Hmsic",
   "corrplot"
 )
 

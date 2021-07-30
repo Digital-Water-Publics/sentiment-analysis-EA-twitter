@@ -118,3 +118,20 @@ entity_sentiment_string <- function(data) {
 # 3. Add new column string e.g. "angry @ supply network"
 # 4. Add polarity sentiment score
 # 5. Export
+#k =5 =6 get topics 3 and 4
+tweets_primary_df_topic3 = tweets_primary_df %>% filter(`key_topic topic(k=5)` == 3) %>% select(word)
+sample5_3 = sample_n(tweets_primary_df_topic3,500)
+kable(sample5_3) %>% kableExtra::kable_material_dark()
+
+tweets_primary_df_topic4 = tweets_primary_df %>% filter(`key_topic topic(k=5)` == 4) %>% select(word)
+sample5_4 = sample_n(tweets_primary_df_topic4,500)
+kable(sample5_4) %>% kableExtra::kable_material_dark()
+
+tweets_primary_df_topic6 = tweets_primary_df %>% filter(`key_topic topic(k=6)` == 3) %>% select(word)
+sample6_3 = sample_n(tweets_primary_df_topic6, 500)
+kable(sample6_3) %>% kableExtra::kable_material_dark()
+
+tweets_primary_df_topic7 = tweets_primary_df %>% filter(`key_topic topic(k=6)` == 4) %>% select(word)
+sample6_4 = sample_n(tweets_primary_df_topic7,500)
+kable(sample6_4) %>% kableExtra::kable_material_dark()
+
