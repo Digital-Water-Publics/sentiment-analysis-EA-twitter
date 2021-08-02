@@ -22,7 +22,7 @@ for (i in 1:nrow(sample_tweets)) {
   
 }
 #Parse tweet and filter by noun and emo-lex
-o = spacy_parse(sample$word[i], pos = TRUE, nounphrase = TRUE) %>%
+o = spacy_parse(sample$word, pos = TRUE, nounphrase = TRUE) %>%
   unnest_tokens(word, token) %>%
   dplyr::filter(pos == "NOUN") %>%
   inner_join(get_sentiments("nrc")) %>%

@@ -13,7 +13,7 @@ clean_tweets_sentiment = function(x) {
     str_remove_all("[[:punct:]]") %>%
     # Remove "RT: " from beginning of retweets
     str_remove_all("^RT:? ") %>%
-    # Replace any newline characters with a space
+    # Replace any newline characters with a =space
     str_replace_all("\\\n", " ") %>%
     # Make everything lowercase
     str_to_lower() %>%
