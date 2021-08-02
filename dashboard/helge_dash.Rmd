@@ -389,7 +389,8 @@ pollution_subset = filter(
     grepl('\\bpolluting\\b', word) |
     grepl('\\bpolluter\\b', word) |
     grepl('\\bpolluters\\b', word) |
-    grepl('\\bwaste\\b', word)
+    grepl('\\bwastewater\\b', word) |
+    grepl('\\bwaste\\b.*\\bwater\\b', word) 
 )
 sample_pollution = sample_n(pollution_subset,1000) %>% select(word)
 DT::datatable(sample_pollution, options = list(
