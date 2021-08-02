@@ -18,7 +18,7 @@ water_indsustry_subset = filter(
 corpus = corpus(water_indsustry_subset$word)
 token_word = data.frame(text = corpus, stringsAsFactors = FALSE) %>% unnest_tokens(word, text)
 senti_word = right_join(token_word, get_sentiments("nrc")) %>%
-  filter(sentiment == "fear" | sentiment == "disgust") %>%
+  filter(sentiment == "disgust") %>%
   count(word, sort = TRUE)
 
 kable(senti_word) %>% kableExtra::kable_material_dark()
@@ -57,7 +57,7 @@ pollution_subset$word = gsub(" waste", "", pollution_subset$word)
 corpus = corpus(pollution_subset$word)
 token_word = data.frame(text = corpus, stringsAsFactors = FALSE) %>% unnest_tokens(word, text)
 senti_word = right_join(token_word, get_sentiments("nrc")) %>%
-  filter(sentiment == "fear" | sentiment == "disgust") %>%
+  filter(sentiment == "disgust") %>%
   count(word, sort = TRUE)
 
 kable(senti_word) %>% kableExtra::kable_material_dark()
