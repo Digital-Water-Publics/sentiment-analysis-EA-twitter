@@ -10,7 +10,7 @@ trust_tweets = tweets_primary_df %>% filter(trust > 0) %>% select(word, sent_sco
 
 df.list = list(anger_tweets,anticpation_tweets,disgust_tweets,fear_tweets,joy_tweets,sadness_tweets,surprise_tweets,trust_tweets)
 
-for(i %in% df.list){
+for(i in df.list){
   
 }
 
