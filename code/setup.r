@@ -147,7 +147,7 @@ if(run){
   
   sentiment_history_nodate = sentiment_history %>% select(-c(date))
   M = cor(sentiment_history_nodate)
-  corrplot(M, method = 'square', diag = FALSE, order = 'hclust', 
+  corrplot(M, method = 'square', diag = FALSE, order = 'hclust', hclust.method = "ward.D2",
            addrect = 2, rect.col = 'black', rect.lwd = 3, tl.pos = 'd', bg = "gold2") 
   
   # ooo %>% tidyr::gather("id", "value", 2:9) %>%
