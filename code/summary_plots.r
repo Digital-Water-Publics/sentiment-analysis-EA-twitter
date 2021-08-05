@@ -47,21 +47,24 @@
 # # "NN.-NN" -> The "." in this regex will match all variants of NN: NNP, NNS etc
 # res = text_chunk[grepl("JJ-NN|NN.-NN", names(text_chunk))]
 # res
+require(tidytext)
+require(RColorBrewer)
+require(gplots)
+theme_set(theme_bw(12))
+nrc_data = lexicon::nrc_emotions %>%  
+  gather("sentiment", "flag", anger:trust, -term) %>% 
+  filter(flag==1)
 
-total_words_count <- tweets_primary_df %>%
-  unnest_tokens(word, word) %>%  
+total_words_count <- df_no_ea %>%
+  unnest_tokens(word, clean_tweet) %>%  
   anti_join(stop_words, by = "word") %>%                  
   filter(!grepl('[0-9]', word)) %>%
   group_by(year) %>%
   summarize(total= n()) %>%
   ungroup()
 
-nrc_data = lexicon::nrc_emotions %>%  
-  gather("sentiment", "flag", anger:trust, -term) %>% 
-  filter(flag==1)
-
-emotion_words_count <- tweets_primary_df %>% 
-  unnest_tokens(word, word) %>%                           
+emotion_words_count <- df_no_ea %>% 
+  unnest_tokens(word, clean_tweet) %>%                           
   anti_join(stop_words, by = "word") %>%                  
   filter(!grepl('[0-9]', word)) %>%
   inner_join(nrc_data, by=c("word"="term"))  %>%
@@ -82,16 +85,15 @@ ggplot(emotions_to_total_words, aes(x=year, y=percent_emotions)) +
   ggtitle("Proportion of emotion words usage \n in EA mentions on Twitter")
 
 ### pull emotion words and aggregate by year and emotion terms
-emotions <- tweets_primary_df %>% 
-  unnest_tokens(word, word) %>%                           
+emotions <- df_no_ea %>% 
+  unnest_tokens(word, clean_tweet) %>%                           
   anti_join(stop_words, by = "word") %>%                  
   filter(!grepl('[0-9]', word)) %>%
   inner_join(nrc_data, by=c("word"="term"))  %>%
-  group_by(year, sentiment) %>%
+  group_by(document, sentiment) %>%
   summarize( freq = n()) %>%
-  mutate(percent=round(freq/sum(freq)*100)) %>%
-  select(-freq) %>%
   ungroup()
+
 ### need to convert the data structure to a wide format
 emo_box = emotions %>%
   spread(sentiment, percent, fill=0) %>%
@@ -138,4 +140,16 @@ ggplot(emotions_diff, aes(x=year, y=difference, colour=difference>0)) +
 
 trust_tweets = tweets_primary_df %>% filter(trust > 0) %>% select(word, sent_score)
 
+no_ea_df_senti$senti = sentiment(
+  no_ea_df_senti$clean_tweet,
+  polarity_dt = lexicon::hash_sentiment_senticnet,
+  hyphen = " ",
+  amplifier.weight = 0.8,
+  n.before = Inf,
+  n.after = Inf,
+  question.weight = 1,
+  adversative.weight = 0.25,
+  neutral.nonverb.like = TRUE,
+  missing_value = 0
+)
 

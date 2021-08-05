@@ -21,6 +21,31 @@ clean_tweets_sentiment = function(x) {
     str_trim("both")
 }
 
+
+remove_known_ea_accounts = function(){
+  ea_accounts = readRDS("data/EA_accounts.rds")
+  all_tweets = read.csv("data/ea_mentions_all.csv")
+  
+  df_no_ea = all_tweets %>% anti_join(ea_accounts)
+  df_no_ea$clean_tweet = clean_tweets_sentiment(df_no_ea$text)
+  
+  df_no_ea$time = substr(df_no_ea$created_at, start = 12, stop = 19)
+  df_no_ea$date = substr(df_no_ea$created_at, start = 1, stop = 10)
+  df_no_ea$date = as.Date(df_no_ea$date)
+  
+  df_no_ea$document = seq.int(nrow(df_no_ea))
+  df_no_ea$year = substr(df_no_ea$created_at,1,4)
+  saveRDS(no_ea_df_senti,"data/removed_ea_accounts_all.RDS")
+  
+  
+}
+
+
+function(){
+  
+}
+
+
 if(file.exists("data/primary_dataframe.rds")) {
   tweets_primary_df = readRDS("data/primary_dataframe.rds")
   #Turn sentiment NA's to 0
@@ -108,7 +133,7 @@ if(file.exists("data/primary_dataframe.rds")) {
   )
   colnames(ea) = "user_username"
   tweets_no_ea_1 = tweets_no_ea %>% anti_join(ea, by = "user_username")
-  write_rds(tweets_no_ea_1, "data/primary_dataframe.rds")
+  write_rds(no_ea_df_senti, "data/primary_dataframe.rds")
 }
 
 senti_polarity_tweets = function(tweets){

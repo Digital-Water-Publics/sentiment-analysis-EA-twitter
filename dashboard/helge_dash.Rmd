@@ -359,7 +359,7 @@ flood_subset = filter(
   grepl('\\bflood\\b', word) |
     grepl('\\bheavy\\b.*\\brain\\b', word)
 )
-sample_flood = sample_n(flood_subset,1000) %>% select(word)
+sample_flood = flood_subset %>% select(word)
 DT::datatable(sample_flood, options = list(
     pageLength = 25
 ))
@@ -392,7 +392,7 @@ pollution_subset = filter(
     grepl('\\bwastewater\\b', word) |
     grepl('\\bwaste\\b.*\\bwater\\b', word) 
 )
-sample_pollution = sample_n(pollution_subset,1000) %>% select(word)
+sample_pollution = pollution_subset %>% select(word)
 DT::datatable(sample_pollution, options = list(
     pageLength = 25
 ))
@@ -429,7 +429,7 @@ water_indsustry_subset = filter(
     grepl('\\bwater\\b.*\\butility\\b', word) |
     grepl('\\bwater\\b.*\\butilities\\b', word)
 )
-sample_water_indsustry = sample_n(water_indsustry_subset,1000) %>% select(word)
+sample_water_indsustry = water_indsustry_subset %>% select(word)
 DT::datatable(sample_water_indsustry, options = list(
     pageLength = 25
 ))

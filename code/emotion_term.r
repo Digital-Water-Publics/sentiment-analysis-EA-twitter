@@ -7,8 +7,8 @@ require(sqldf)
 theme_set(theme_bw(12))
 ### pull emotion words and aggregate by year and emotion terms
 
-emotions <- tweets_primary_df %>%
-  unnest_tokens(word, word) %>%                           
+emotions <- df_no_ea %>%
+  unnest_tokens(word, clean_tweet) %>%                           
   anti_join(stop_words, by = "word") %>%                  
   filter(!grepl('[0-9]', word)) %>%
   left_join(get_sentiments("nrc"), by = "word") %>%

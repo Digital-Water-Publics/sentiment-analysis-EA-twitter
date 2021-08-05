@@ -1,0 +1,23 @@
+---
+title: "Exploring-Trust"
+author: "Nathanael Sheehan"
+date: "05/08/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+df_no_ea = readRDS("data/primary_dataframe.rds")
+```
+
+## Motivation
+Trust is a key emotion in the relationship between the public and the EA, with over 70,000 tweets featuring a NRC key word associated with Trust. On the surface, this might seem that the public have consistently trusted the EA in their actions over the past five year. However, from our closed reading of tweets, we hypthosise that tweets flagged by the Trust NRC lexicon may also be associated with distrust. This notebook explores notions of trust and distrust within our dataset. 
+
+```{r}
+trust_tweets = df_no_ea %>% filter(trust > 0) %>% select(text, df_no_ea$senti$sentiment)
+head(trust_tweets)
+```
+
+
+
