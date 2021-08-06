@@ -11,7 +11,7 @@ tweets = get_all_tweets(
   ),
   is_retweet = FALSE,
   lang = "en",
-  start_tweets = "2021-06-01T00:00:00Z",
+  start_tweets = "2017-06-01T00:00:00Z",
   end_tweets = "2021-08-01T00:00:00Z",
   bearer_token = get_bearer(),
   data_path = "data6/",
