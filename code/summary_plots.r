@@ -6,24 +6,24 @@ theme_set(theme_bw(12))
 summary_plots = function(x) {
   total_words_count = x %>%
     unnest_tokens(word, clean_tweet) %>%
-    anti_join(stop_words, by = "word") %>%
+    anti_join(stop_words, by = "word") %>%                  
     filter(!grepl('[0-9]', word)) %>%
     group_by(year) %>%
-    summarize(total = n()) %>%
+    summarize(total= n()) %>%
     ungroup()
   
   emotion_words_count = x %>%
     unnest_tokens(word, clean_tweet) %>%
-    anti_join(stop_words, by = "word") %>%
+    anti_join(stop_words, by = "word") %>%                  
     filter(!grepl('[0-9]', word)) %>%
-    inner_join(nrc_data, by = c("word" = "term"))  %>%
+    inner_join(nrc_data, by=c("word"="term"))  %>%
     group_by(year) %>%
-    summarize(emotions = n()) %>%
+    summarize(emotions= n()) %>%
     ungroup()
   
-  emotions_to_total_words = x %>%
-    left_join(emotion_words_count, by = "year") %>%
-    mutate(percent_emotions = round((emotions / total) * 100, 1))
+  emotions_to_total_words <- total_words_count %>%
+    left_join(emotion_words_count, by="year") %>%
+    mutate(percent_emotions=round((emotions/total)*100,1))
   
   ggplot(emotions_to_total_words, aes(x = year, y = percent_emotions)) +
     geom_line(size = 1) +
@@ -36,11 +36,13 @@ summary_plots = function(x) {
   ### pull emotion words and aggregate by year and emotion terms
   emotions = x %>%
     unnest_tokens(word, clean_tweet) %>%
-    anti_join(stop_words, by = "word") %>%
+    anti_join(stop_words, by = "word") %>%                  
     filter(!grepl('[0-9]', word)) %>%
-    inner_join(nrc_data, by = c("word" = "term"))  %>%
-    group_by(document, sentiment) %>%
-    summarize(freq = n()) %>%
+    inner_join(nrc_data, by=c("word"="term"))  %>%
+    group_by(year, sentiment) %>%
+    summarize( freq = n()) %>%
+    mutate(percent=round(freq/sum(freq)*100)) %>%
+    select(-freq) %>%
     ungroup()
   
   ### need to convert the data structure to a wide format
@@ -116,7 +118,6 @@ summary_plots = function(x) {
     theme(legend.position = "none") +
     facet_wrap( ~ sentiment, ncol = 4)
   
-  
 }
 
-summary_plots(dd_tt)
+summary_plots(df_no_ea)
