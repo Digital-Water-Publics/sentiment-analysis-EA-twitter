@@ -54,7 +54,8 @@ df_no_ea = df_no_ea %>% mutate_at(
   vars(anger, anticipation, disgust, fear, joy, sadness, surprise, trust),
   ~ replace_na(., 0)
 )
-
+saveRDS(df_no_ea,"data/df_no_ea.RDS")
+df_no_ea = readRDS("data/df_no_ea.RDS")
 #Subsetting tweets
 trust_tweets = df_no_ea %>% filter(trust > 0)
 
@@ -96,4 +97,3 @@ ggplot(trust_time,aes(x=date,y=n,)) + geom_line() +
     panel.spacing.x = unit(2, "line"),
     panel.spacing.y = unit(1, "line")
   )
-
