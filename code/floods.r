@@ -23,7 +23,8 @@ sentiment_history = df_no_ea %>%
   group_by(date) %>%
   summarise(across(anticipation:surprise, ~ sum(.x, na.rm = FALSE)))
 
-popo = floods_ok %>% crossing(sentiment_history)  %>%
+# create a total sentiment score for each flood event
+flood_event_sentiment = floods_ok %>% crossing(sentiment_history)  %>%
   mutate(across(c(start_date, end_date, date), ymd),
          interval = interval(start_date, end_date)) %>%
   filter(date %within% interval) %>%
