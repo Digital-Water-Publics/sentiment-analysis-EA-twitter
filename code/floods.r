@@ -50,3 +50,16 @@ flood_event_sentiment = floods_ok %>% crossing(sentiment_history)  %>%
   ) %>%
   distinct(name, .keep_all = TRUE) %>%
   arrange(interval)
+
+# create table
+kableExtra::kable(flood_event_sentiment) %>% kableExtra::kable_material_dark()
+
+# join with spatial data
+flood_event_sentiment_sf = right_join(flood_event_sentiment,floods_study_year) %>%
+  st_as_sf()
+
+# plot data
+tmap_mode("view")
+tm_basemap("Stamen.Toner") +
+tm_shape(flood_event_sentiment_sf) + 
+  tm_polygons("sum_trust",  palette = "RdYlBu")
