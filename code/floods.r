@@ -14,7 +14,7 @@ floods_study_year = floods %>% filter(year > 2015) %>%
   filter(flood_caus != "unknown") %>%
   filter(fluvial_f == "True")
 
-floods_ok = floods_study_year %>% select(name, start_date, end_date) %>%
+floods_no_sf = floods_study_year %>% select(name, start_date, end_date) %>%
   st_drop_geometry() %>%
   distinct(name, .keep_all = TRUE)
 
@@ -24,7 +24,7 @@ sentiment_history = df_no_ea %>%
   summarise(across(anticipation:surprise, ~ sum(.x, na.rm = FALSE)))
 
 # create a total sentiment score for each flood event
-flood_event_sentiment = floods_ok %>% crossing(sentiment_history)  %>%
+flood_event_sentiment = floods_no_sf %>% crossing(sentiment_history)  %>%
   mutate(across(c(start_date, end_date, date), ymd),
          interval = interval(start_date, end_date)) %>%
   filter(date %within% interval) %>%
@@ -51,6 +51,9 @@ flood_event_sentiment = floods_ok %>% crossing(sentiment_history)  %>%
   distinct(name, .keep_all = TRUE) %>%
   arrange(interval)
 
+# create column with total sentiment
+flood_event_sentiment$sum_sentiment = as.numeric(apply(flood_event_sentiment[,3:10],1,sum))
+
 # create table
 kableExtra::kable(flood_event_sentiment) %>% kableExtra::kable_material_dark()
 
@@ -62,4 +65,4 @@ flood_event_sentiment_sf = right_join(flood_event_sentiment,floods_study_year) %
 tmap_mode("view")
 tm_basemap("Stamen.Toner") +
 tm_shape(flood_event_sentiment_sf) + 
-  tm_polygons("sum_trust",  palette = "RdYlBu")
+  tm_polygons("sum_sentiment",  palette = "RdYlBu")
