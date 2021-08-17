@@ -18,11 +18,6 @@ remove_known_ea_accounts = function(){
 }
 
 
-function(){
-  
-}
-
-
 if(file.exists("data/primary_dataframe.rds")) {
   tweets_primary_df = readRDS("data/primary_dataframe.rds")
   #Turn sentiment NA's to 0
