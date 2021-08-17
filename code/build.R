@@ -7,32 +7,30 @@ if (mine_build) {
   # Mine the Twittersphere  -------------------------------------------------------
   source("code/twitter_mine.R")
 }
-# Helper methods --------------------------------------------------------
-source("code/setup.r")
+# Build set up including: general functions, data transformation --------------------------------------------------------
+source("code/build_setup.r")
 
 # N-grams -----------------------------------------------------------------
 source("code/n_grams.r")
-# Calculate colocation for sinlge phrases
-suppressMessages(for (i in 1:nrow(nounphrase)) {
-  bigram_plots(data = bigrams_filtered, word = nounphrase$phrasetoken[i])
-})
+
+# Calculate collocation for bigram phrases
+suppressWarnings(
+  suppressMessages(for (i in 1:nrow(nounphrase)) {
+    bigram_plots(data = bigrams_filtered, word = nounphrase$phrasetoken[i])
+  }))
+
 # Calculate colocation for nounphrases
 words = as.data.frame(c("river", "flood", "water", "waste", "pollution", "sewage", "bad"))
 colnames(words) = "word"
-suppressMessages(for (i in 1:nrow(words)) {
-  bigram_plots(data = bigrams_filtered_3, word = words$word[i])
-})
-
+suppressWarnings(
+  suppressMessages(for (i in 1:nrow(words)) {
+    bigram_plots(data = bigrams_filtered_3, word = words$word[i])
+  })
+)
+# remove dataframes
 rm(bigrams_filtered, bigrams_filtered_3, words, nounphrase)
+
 # Topic modelling -----------------------------------------------------------------
 source("code/topic_modelling.r")
 topic_model_tweet_corpus(tweet_vector = tweets_primary_df$word)
 
-
-
-
-# Sentiment functions -----------------------------------------------------
-source("code/sentiment_functions.r")
-
-# Sentiment dataframe
-source("code/sentiment.R")
