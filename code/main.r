@@ -20,10 +20,10 @@ clean_tweets_sentiment = function(x) {
     str_trim("both")
 }
 
-if (file.exists("data/df_no_ea.RDS") {
+if (file.exists("data/df_no_ea.RDS")) {
   df_no_ea = readRDS("data/df_no_ea.RDS")
-}) else {
-  Read dataset and EA accounts
+} else {
+  #Read dataset and EA accounts
   ea_accounts = readRDS("data/EA_accounts.rds")
   all_tweets = read.csv("data/ea_mentions_all.csv")
   #Remove EA accounts from dataset
