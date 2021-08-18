@@ -35,7 +35,10 @@ rm(bigrams_filtered, bigrams_filtered_3, words, nounphrase)
 
 source("code/semantic_freq.r")
 
+# OPTIONAL 
 # Topic modelling -----------------------------------------------------------------
 source("code/topic_modelling.r")
 #topic_model_tweet_corpus(tweet_vector = tweets_primary_df$word)
+# Networks ----------------------------------------------------------------
+source("code/networks.R")
 
