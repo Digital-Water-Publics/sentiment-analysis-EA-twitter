@@ -70,5 +70,4 @@ if (nrow(senti) > 1) {
   main_senti = senti
 }
 
-
 string = paste0(main_senti,sep = " - ", bigrams$word1,sep=" ", bigrams$word2, sep=" ", bigrams$word3, sep=" ", bigrams$word4)

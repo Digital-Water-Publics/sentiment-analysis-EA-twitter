@@ -8,7 +8,7 @@ dfm = dfm(ea$text)
 tag_dfm <- dfm_select(tweet_dfm, pattern = "#*")
 toptag <- names(topfeatures(tag_dfm, 50))
 head(toptag)
-library("quanteda.textplots")
+
 tag_fcm <- fcm(tag_dfm)
 head(tag_fcm)
 topgat_fcm <- fcm_select(tag_fcm, pattern = toptag)

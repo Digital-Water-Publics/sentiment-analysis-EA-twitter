@@ -18,7 +18,11 @@ pkgs = c(
   "corrplot",
   "knitr",
   "kableExtra",
-  "DT"
+  "DT",
+  "tidytext",
+  "gplots",
+  "RColorBrewer",
+  "quanteda.textplots"
 )
 
 # Install pkgs not yet installed

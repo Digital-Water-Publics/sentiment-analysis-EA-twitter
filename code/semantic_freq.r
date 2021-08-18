@@ -2,14 +2,13 @@
 #Set up Spacy
 spacy_initialize()
 
-
 #Subset to only include tweet
 if (file.exists("data/parsed_tweets_POS_stop_words.csv")) {
   text = read.csv("data/parsed_tweets_POS_stop_words.csv")
 } else {
-  text = tweets_no_ea %>% select(text) %>% anti_join(stop_words, by = c("text" = "word"))
+  text = df_no_ea %>% select(text) %>% anti_join(stop_words, by = c("text" = "word"))
   write.csv(text, "data/parsed_tweets_POS_stop_words.csv")
-  }
+}
 
 if (file.exists("data/parsed_tweets_POS.csv")) {
   #Read parsed text csv
@@ -17,7 +16,7 @@ if (file.exists("data/parsed_tweets_POS.csv")) {
 } else {
   #Parse tweets into dataframe
   parsedtxt = spacy_parse(
-    tweets_primary_df$word,
+    df_no_ea$text,
     pos = TRUE,
     tag = TRUE,
     lemma = TRUE,
@@ -83,7 +82,6 @@ if (file.exists("data/adj_freq.csv")) {
   write.csv(parsed_sub_adj, "data/adj_freq.csv")
 }
 
-
 # Extract nounphrases -----------------------------------------------------
 if (file.exists("data/nounphrase_freq.csv")) {
   nounphrase_text_sub_head = nounphrase_text_sub[(1:30),]
@@ -93,7 +91,7 @@ if (file.exists("data/nounphrase_freq.csv")) {
     coord_flip()
 } else {
   
-  nounphrase_text = spacy_extract_nounphrases(clean_tweets,
+  nounphrase_text = spacy_extract_nounphrases(df_no_ea$text %>% clean_tweets_sentiment(),
                                               output = c("data.frame"),
                                               multithread = TRUE)
 
@@ -123,7 +121,7 @@ if (file.exists("data/entity_text_freq.csv")) {
   entity_type_sub = read.csv("data/entity_type_freq.csv")
 } else {
   #Extract entities
-  entity_text = spacy_extract_entity(clean_tweets,
+  entity_text = spacy_extract_entity(df_no_ea$text %>% clean_tweets_sentiment(),
                                      output = c("data.frame"),
                                      multithread = TRUE)
 
@@ -154,18 +152,18 @@ if (file.exists("data/entity_text_freq.csv")) {
 #Termiante spacy session
 spacy_finalize()
 
-if (file.exists("data/emo_lex_freq.csv")) {
-  emo_lex_freq = read.csv("data/emo_lex_freq.csv")
-} else {
-  tt = unlist(tweets_no_ea_1$emo_lex_trigger)
-  tt = as.data.frame(tt)
-  tt = as.data.frame(table(tt))
-  tt = tt %>% arrange(desc(Freq))
-  write.csv(tt, "data/emo_lex_freq.csv")
-  tt = tt[(1:30), ]
-
-  ggplot(tt, aes(x = reorder(tt, Freq), y = Freq)) +
-    geom_bar(stat = "identity") +
-    coord_flip()
-
-}
+# if (file.exists("data/emo_lex_freq.csv")) {
+#   emo_lex_freq = read.csv("data/emo_lex_freq.csv")
+# } else {
+#   tt = unlist(df_no_ea)
+#   tt = as.data.frame(tt)
+#   tt = as.data.frame(table(tt))
+#   tt = tt %>% arrange(desc(Freq))
+#   write.csv(tt, "data/emo_lex_freq.csv")
+#   tt = tt[(1:30), ]
+# 
+#   ggplot(tt, aes(x = reorder(tt, Freq), y = Freq)) +
+#     geom_bar(stat = "identity") +
+#     coord_flip()
+# 
+# }
