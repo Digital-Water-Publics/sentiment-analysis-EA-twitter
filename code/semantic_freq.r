@@ -152,18 +152,50 @@ if (file.exists("data/entity_text_freq.csv")) {
 #Termiante spacy session
 spacy_finalize()
 
-# if (file.exists("data/emo_lex_freq.csv")) {
-#   emo_lex_freq = read.csv("data/emo_lex_freq.csv")
-# } else {
-#   tt = unlist(df_no_ea)
-#   tt = as.data.frame(tt)
-#   tt = as.data.frame(table(tt))
-#   tt = tt %>% arrange(desc(Freq))
-#   write.csv(tt, "data/emo_lex_freq.csv")
-#   tt = tt[(1:30), ]
-# 
-#   ggplot(tt, aes(x = reorder(tt, Freq), y = Freq)) +
-#     geom_bar(stat = "identity") +
-#     coord_flip()
-# 
-# }
+
+
+if (file.exists("data/emo_lex_freq.csv")) {
+  emo_lex_freq = read.csv("data/emo_lex_freq.csv")
+} else {
+
+  #Join data with NRC lex
+  twee_sub = parsedtxt %>%
+    rename(word = token) %>%
+    inner_join(get_sentiments("nrc"), by = "word")
+  
+  #Group emo-lex trigger words
+  emo_lex_trigger_freq = twee_sub %>%
+    group_by(doc_id, word) %>%
+    summarise(count = n()) %>%
+    select(doc_id, word)
+  
+  # Convert words to matrix
+  o = split(emo_lex_trigger_freq$word, emo_lex_trigger_freq$doc_id)
+  
+  o = strsplit(as.character(o), "_")
+  
+  kl = cbind(o)
+  kl = as.data.frame(kl)
+  
+  df = tibble::rownames_to_column(kl, "doc_id")
+  df = as.data.frame(df)
+  df$doc_id = as.numeric(df$doc_id)
+  
+  df_no_ea$doc_id = seq.int(nrow(df_no_ea))
+  df_no_ea = left_join(df_no_ea, df) %>% rename(emo_lex_trigger = o)
+  
+  
+  tt = unlist(emo_lex_trigger_freq$word)
+  tt = as.data.frame(tt)
+  tt = as.data.frame(table(tt))
+  tt = tt %>% arrange(desc(Freq))
+  
+  write.csv(tt, "data/emo_lex_freq.csv")
+  
+  tt = tt[(1:30), ]
+
+  ggplot(tt, aes(x = reorder(tt, Freq), y = Freq)) +
+    geom_bar(stat = "identity") +
+    coord_flip()
+
+}

@@ -82,6 +82,8 @@ if (file.exists("data/df_no_ea.RDS")) {
     vars(anger, anticipation, disgust, fear, joy, sadness, surprise, trust),
     ~ replace_na(., 0)
   )
+  
+  
   saveRDS(df_no_ea,"data/df_no_ea.RDS")
 }
 
