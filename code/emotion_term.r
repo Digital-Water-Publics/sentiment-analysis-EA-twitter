@@ -17,14 +17,25 @@ emotions <- df_no_ea %>%
   summarize( freq = n()) %>%
   mutate(percent=round(freq/sum(freq)*100)) %>%
   select(-freq) 
-## Normalize data 
+
+# emotions.1 <- df_no_ea %>%
+#   unnest_tokens(word, clean_tweet) %>%                           
+#   anti_join(stop_words, by = "word") %>%                  
+#   filter(!grepl('[0-9]', word)) %>%
+#   left_join(get_sentiments("nrc"), by = "word") %>%
+#   filter(!(sentiment == "negative" | sentiment == "positive")) %>%
+#   group_by(date, sentiment) %>%
+#   summarize( freq = n()) %>%
+#   mutate(percent=round(freq/sum(freq)*100)) %>%
+#   select(-freq) 
+# ## Normalize data 
 # sd_scale <- function(x) {
 #   (x - mean(x))/sd(x)
 # }
-# emotions[,c(2:9)] <- apply(emotions[,c(2:9)], 2, sd_scale)
-# emotions <- as.data.frame(emotions)
-# rownames(emotions) <- emotions[,1]
-# emotions3 <- emotions[,-1]
+# emotions.1[,c(3)] <- apply(emotions.1[,c(3)], 1, sd_scale)
+# emotions.1 <- as.data.frame(emotions.1)
+# rownames(emotions.1) <- emotions.1[,1]
+# emotions3 <- emotions.1[,-1]
 # emotions3 <- as.matrix(emotions3)
 # ## Using a heatmap and clustering to visualize and profile emotion terms expression data
 # heatmap.2(

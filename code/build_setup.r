@@ -39,6 +39,7 @@ if (file.exists("data/df_no_ea.RDS")) {
   df_no_ea$date = as.Date(df_no_ea$date)
   df_no_ea$document = seq.int(nrow(df_no_ea))
   df_no_ea$year = substr(df_no_ea$created_at, 1, 4)
+  df_no_ea$year_month = substr(df_no_ea$created_at, 1,7)
   #Calculate polarity of tweets
   df_no_ea$senti_nrc = sentiment(
     df_no_ea$clean_tweet,
