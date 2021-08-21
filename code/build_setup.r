@@ -208,7 +208,7 @@ summary_plots = function(x) {
   
 }
 
-summary_plots(df_no_ea)
+#summary_plots(df_no_ea)
 
 
 # Sentiment Functions -----------------------------------------------------
@@ -291,3 +291,4 @@ polarity_tweet_sentiment = function(corpus) {
     geom_vline(xintercept = 0, color = "red")
 }
 #test polarity_tweet_sentiment(corpus = tweets_text)
+
