@@ -16,7 +16,7 @@ if (file.exists("data/parsed_tweets_POS.csv")) {
 } else {
   #Parse tweets into dataframe
   parsedtxt = spacy_parse(
-    df_no_ea$text,
+    df_no_ea$clean_tweet,
     pos = TRUE,
     tag = TRUE,
     lemma = TRUE,
