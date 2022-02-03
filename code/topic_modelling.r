@@ -11,6 +11,10 @@ seed = list(123, 456, 789, 987, 654)
 # return the highest probability as the result
 best = TRUE
 
+run_lda_test = function(corpus) {
+  
+}
+
 topic_model_tweet_corpus = function(tweet_vector, n) {
   # Converting tweets into corpus ----------------------------------------------
   print("Converting tweets into corpus")

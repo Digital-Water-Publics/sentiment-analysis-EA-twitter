@@ -40,20 +40,24 @@ if (file.exists("data/df_no_ea.RDS")) {
   df_no_ea$document = seq.int(nrow(df_no_ea))
   df_no_ea$year = substr(df_no_ea$created_at, 1, 4)
   df_no_ea$year_month = substr(df_no_ea$created_at, 1,7)
-  #Calculate polarity of tweets
-  df_no_ea$senti_nrc = sentiment(
-    df_no_ea$clean_tweet,
-    polarity_dt =lexicon::hash_sentiment_sentiword,
-    hyphen = " ",
-    amplifier.weight = 0.8,
-    n.before = Inf,
-    n.after = Inf,
-    question.weight = 1,
-    adversative.weight = 0.5,
-    neutral.nonverb.like = TRUE,
-    missing_value = 0
-  )
   
+  #Calculate polarity of tweets
+  
+  df_no_ea$senti_nrc = get_sentiment(df_no_ea$clean_tweet, method = "syuzhet")
+
+    # df_no_ea$senti_nrc = sentiment(
+  #   df_no_ea$clean_tweet,
+  #   polarity_dt =lexicon::hash_sentiment_sentiword,
+  #   hyphen = " ",
+  #   amplifier.weight = 0.8,
+  #   n.before = Inf,
+  #   n.after = Inf,
+  #   question.weight = 1,
+  #   adversative.weight = 0.5,
+  #   neutral.nonverb.like = TRUE,
+  #   missing_value = 0
+  # )
+  # 
   # Get NRC emo-lex data
   nrc_data = lexicon::nrc_emotions %>%
     gather("sentiment", "flag", anger:trust,-term) %>%

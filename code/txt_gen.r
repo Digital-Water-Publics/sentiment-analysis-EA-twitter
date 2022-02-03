@@ -5,7 +5,7 @@ library(tensorflow)
 
 use_condaenv("r-tensorflow")
 
-df_no_ea_samp = sample_n(df_no_ea,2000)
+df_no_ea_samp = sample_n(df_no_ea,5)
 
 max_length <- 40
 
@@ -55,7 +55,7 @@ create_model <- function(chars, max_length){
     layer_activation("softmax") %>% 
     compile(
       loss = "categorical_crossentropy", 
-      optimizer = optimizer_rmsprop(lr = 0.01)
+      optimizer = optimizer_rmsprop(learning_rate  = 0.01)
     )
 }
 fit_model <- function(model, vectors, epochs = 1){
@@ -139,5 +139,6 @@ iterate_model <- function(model, text, chars, max_length,
 }
 model <- create_model(chars, max_length)
 
-iterate_model(model, text, chars, max_length, diversity, vectors, 40)
+
+iterate_model(model, text, chars, max_length, diversity, vectors, 5)
 ## NULL
